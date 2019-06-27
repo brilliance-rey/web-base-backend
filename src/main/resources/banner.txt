@@ -1,0 +1,7 @@
+|-----------------------------------------|
+|    Sunkaisens Web Service               |
+|    V1.0.0                               |
+|                                         |
+|    Spring-Boot-Version: ${spring-boot.version}   |
+|    @Copyright: www.sunkaisens.com       |
+|-----------------------------------------|
