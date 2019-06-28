@@ -3,18 +3,18 @@
 <mapper namespace="com.sunkaisens.ibss.system.dao.UserMapper">
     <resultMap id="BaseResultMap" type="com.sunkaisens.ibss.system.domain.User">
         <id column="USER_ID" jdbcType="DECIMAL" property="userId"/>
-        <result column="USERNAME" jdbcType="VARCHAR" property="username"/>
-        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
-        <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId"/>
-        <result column="EMAIL" jdbcType="VARCHAR" property="email"/>
-        <result column="MOBILE" jdbcType="VARCHAR" property="mobile"/>
-        <result column="STATUS" jdbcType="CHAR" property="status"/>
-        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime"/>
-        <result column="LAST_LOGIN_TIME" jdbcType="TIMESTAMP" property="lastLoginTime"/>
-        <result column="SSEX" jdbcType="CHAR" property="ssex"/>
-        <result column="AVATAR" jdbcType="VARCHAR" property="avatar"/>
-        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="dept_id" jdbcType="DECIMAL" property="deptId"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="status" jdbcType="CHAR" property="status"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
+        <result column="ssex" jdbcType="CHAR" property="ssex"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
     </resultMap>
 
     <select id="findUserDetail" resultType="user" parameterType="user">

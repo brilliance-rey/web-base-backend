@@ -106,7 +106,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <!-- <version>5.1.46</version> -->
+            <version>5.1.46</version>
         </dependency>
         <!-- aop依赖 -->
         <dependency>
