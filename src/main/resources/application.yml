@@ -21,7 +21,7 @@ spring:
           username: root
           password: sunkaisens
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://127.0.0.1:3306/febs_shiro_jwt?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+          url: jdbc:mysql://127.0.0.1:3306/web_base_backend?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
         # 数据源-2，名称为 test
 #        test:
 #          username: root
@@ -53,7 +53,7 @@ spring:
 
 #mybatis plus 设置
 mybatis-plus:
-  type-aliases-package: cc.mrbird.febs.system.domain,cc.mrbird.febs.job.domain
+  type-aliases-package: com.sunkaisens.ibss.system.domain,com.sunkaisens.ibss.job.domain
   mapper-locations: classpath:mapper/*/*.xml
   configuration:
     jdbc-type-for-null: null
