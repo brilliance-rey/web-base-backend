@@ -252,12 +252,12 @@ INSERT INTO `qrtz_triggers` VALUES ('MyScheduler', 'TASK_3', 'DEFAULT', 'TASK_3'
 -- ----------------------------
 DROP TABLE IF EXISTS `t_dept`;
 CREATE TABLE `t_dept` (
-  `DEPT_ID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '部门ID',
-  `PARENT_ID` bigint(20) NOT NULL COMMENT '上级部门ID',
-  `DEPT_NAME` varchar(100) NOT NULL COMMENT '部门名称',
-  `ORDER_NUM` double(20,0) DEFAULT NULL COMMENT '排序',
-  `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
-  `MODIFY_TIME` datetime DEFAULT NULL COMMENT '修改时间',
+  `dept_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '部门ID',
+  `parent_id` bigint(20) NOT NULL COMMENT '上级部门ID',
+  `dept_name` varchar(100) NOT NULL COMMENT '部门名称',
+  `order_num` double(20,0) DEFAULT NULL COMMENT '排序',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`DEPT_ID`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -276,11 +276,11 @@ INSERT INTO `t_dept` VALUES ('6', '0', '测试部', '4', '2018-01-04 15:42:38', 
 -- ----------------------------
 DROP TABLE IF EXISTS `t_dict`;
 CREATE TABLE `t_dict` (
-  `DICT_ID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典ID',
-  `KEYY` bigint(20) NOT NULL COMMENT '键',
-  `VALUEE` varchar(100) NOT NULL COMMENT '值',
-  `FIELD_NAME` varchar(100) NOT NULL COMMENT '字段名称',
-  `TABLE_NAME` varchar(100) NOT NULL COMMENT '表名',
+  `dict_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '字典ID',
+  `keyy` bigint(20) NOT NULL COMMENT '键',
+  `valuee` varchar(100) NOT NULL COMMENT '值',
+  `field_name` varchar(100) NOT NULL COMMENT '字段名称',
+  `table_name` varchar(100) NOT NULL COMMENT '表名',
   PRIMARY KEY (`DICT_ID`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -304,14 +304,14 @@ INSERT INTO `t_dict` VALUES ('33', '1', '失败', 'status', 't_job_log');
 -- ----------------------------
 DROP TABLE IF EXISTS `t_job`;
 CREATE TABLE `t_job` (
-  `JOB_ID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '任务id',
-  `BEAN_NAME` varchar(100) NOT NULL COMMENT 'spring bean名称',
-  `METHOD_NAME` varchar(100) NOT NULL COMMENT '方法名',
-  `PARAMS` varchar(200) DEFAULT NULL COMMENT '参数',
-  `CRON_EXPRESSION` varchar(100) NOT NULL COMMENT 'cron表达式',
-  `STATUS` char(2) NOT NULL COMMENT '任务状态  0：正常  1：暂停',
-  `REMARK` varchar(200) DEFAULT NULL COMMENT '备注',
-  `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `job_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '任务id',
+  `bean_name` varchar(100) NOT NULL COMMENT 'spring bean名称',
+  `method_name` varchar(100) NOT NULL COMMENT '方法名',
+  `params` varchar(200) DEFAULT NULL COMMENT '参数',
+  `cron_expression` varchar(100) NOT NULL COMMENT 'cron表达式',
+  `status` char(2) NOT NULL COMMENT '任务状态  0：正常  1：暂停',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`JOB_ID`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -328,15 +328,15 @@ INSERT INTO `t_job` VALUES ('11', 'testTask', 'test2', null, '0/5 * * * * ?', '1
 -- ----------------------------
 DROP TABLE IF EXISTS `t_job_log`;
 CREATE TABLE `t_job_log` (
-  `LOG_ID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '任务日志id',
-  `JOB_ID` bigint(20) NOT NULL COMMENT '任务id',
-  `BEAN_NAME` varchar(100) NOT NULL COMMENT 'spring bean名称',
-  `METHOD_NAME` varchar(100) NOT NULL COMMENT '方法名',
-  `PARAMS` varchar(200) DEFAULT NULL COMMENT '参数',
-  `STATUS` char(2) NOT NULL COMMENT '任务状态    0：成功    1：失败',
-  `ERROR` text COMMENT '失败信息',
-  `TIMES` decimal(11,0) DEFAULT NULL COMMENT '耗时(单位：毫秒)',
-  `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '任务日志id',
+  `job_id` bigint(20) NOT NULL COMMENT '任务id',
+  `bean_name` varchar(100) NOT NULL COMMENT 'spring bean名称',
+  `method_name` varchar(100) NOT NULL COMMENT '方法名',
+  `params` varchar(200) DEFAULT NULL COMMENT '参数',
+  `status` char(2) NOT NULL COMMENT '任务状态    0：成功    1：失败',
+  `error` text COMMENT '失败信息',
+  `times` decimal(11,0) DEFAULT NULL COMMENT '耗时(单位：毫秒)',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`LOG_ID`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2502 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -395,14 +395,14 @@ INSERT INTO `t_job_log` VALUES ('2501', '1', 'testTask', 'test', 'mrbird', '0', 
 -- ----------------------------
 DROP TABLE IF EXISTS `t_log`;
 CREATE TABLE `t_log` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '日志ID',
-  `USERNAME` varchar(50) DEFAULT NULL COMMENT '操作用户',
-  `OPERATION` text COMMENT '操作内容',
-  `TIME` decimal(11,0) DEFAULT NULL COMMENT '耗时',
-  `METHOD` text COMMENT '操作方法',
-  `PARAMS` text COMMENT '方法参数',
-  `IP` varchar(64) DEFAULT NULL COMMENT '操作者IP',
-  `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '日志ID',
+  `username` varchar(50) DEFAULT NULL COMMENT '操作用户',
+  `operation` text COMMENT '操作内容',
+  `time` decimal(11,0) DEFAULT NULL COMMENT '耗时',
+  `method` text COMMENT '操作方法',
+  `params` text COMMENT '方法参数',
+  `ip` varchar(64) DEFAULT NULL COMMENT '操作者IP',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `location` varchar(50) DEFAULT NULL COMMENT '操作地点',
   PRIMARY KEY (`ID`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1839 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
@@ -440,10 +440,10 @@ INSERT INTO `t_log` VALUES ('1838', 'mrbird', '执行定时任务', '41', 'cc.mr
 -- ----------------------------
 DROP TABLE IF EXISTS `t_login_log`;
 CREATE TABLE `t_login_log` (
-  `USERNAME` varchar(100) NOT NULL COMMENT '用户名',
-  `LOGIN_TIME` datetime NOT NULL COMMENT '登录时间',
-  `LOCATION` varchar(255) DEFAULT NULL COMMENT '登录地点',
-  `IP` varchar(100) DEFAULT NULL COMMENT 'IP地址'
+  `username` varchar(100) NOT NULL COMMENT '用户名',
+  `login_time` datetime NOT NULL COMMENT '登录时间',
+  `location` varchar(255) DEFAULT NULL COMMENT '登录地点',
+  `ip` varchar(100) DEFAULT NULL COMMENT 'IP地址'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
@@ -626,17 +626,17 @@ INSERT INTO `t_login_log` VALUES ('mrbird', '2019-06-28 00:49:44', '', '127.0.0.
 -- ----------------------------
 DROP TABLE IF EXISTS `t_menu`;
 CREATE TABLE `t_menu` (
-  `MENU_ID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '菜单/按钮ID',
-  `PARENT_ID` bigint(20) NOT NULL COMMENT '上级菜单ID',
-  `MENU_NAME` varchar(50) NOT NULL COMMENT '菜单/按钮名称',
-  `PATH` varchar(255) DEFAULT NULL COMMENT '对应路由path',
-  `COMPONENT` varchar(255) DEFAULT NULL COMMENT '对应路由组件component',
-  `PERMS` varchar(50) DEFAULT NULL COMMENT '权限标识',
-  `ICON` varchar(50) DEFAULT NULL COMMENT '图标',
-  `TYPE` char(2) NOT NULL COMMENT '类型 0菜单 1按钮',
-  `ORDER_NUM` double(20,0) DEFAULT NULL COMMENT '排序',
-  `CREATE_TIME` datetime NOT NULL COMMENT '创建时间',
-  `MODIFY_TIME` datetime DEFAULT NULL COMMENT '修改时间',
+  `menu_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '菜单/按钮ID',
+  `parent_id` bigint(20) NOT NULL COMMENT '上级菜单ID',
+  `menu_name` varchar(50) NOT NULL COMMENT '菜单/按钮名称',
+  `path` varchar(255) DEFAULT NULL COMMENT '对应路由path',
+  `component` varchar(255) DEFAULT NULL COMMENT '对应路由组件component',
+  `perms` varchar(50) DEFAULT NULL COMMENT '权限标识',
+  `icon` varchar(50) DEFAULT NULL COMMENT '图标',
+  `type` char(2) NOT NULL COMMENT '类型 0菜单 1按钮',
+  `order_num` double(20,0) DEFAULT NULL COMMENT '排序',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`MENU_ID`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -708,11 +708,11 @@ INSERT INTO `t_menu` VALUES ('138', '109', '导出Excel', null, null, 'jobLog:ex
 -- ----------------------------
 DROP TABLE IF EXISTS `t_role`;
 CREATE TABLE `t_role` (
-  `ROLE_ID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '角色ID',
-  `ROLE_NAME` varchar(10) NOT NULL COMMENT '角色名称',
-  `REMARK` varchar(100) DEFAULT NULL COMMENT '角色描述',
-  `CREATE_TIME` datetime NOT NULL COMMENT '创建时间',
-  `MODIFY_TIME` datetime DEFAULT NULL COMMENT '修改时间',
+  `role_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '角色ID',
+  `role_name` varchar(10) NOT NULL COMMENT '角色名称',
+  `remark` varchar(100) DEFAULT NULL COMMENT '角色描述',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`ROLE_ID`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -728,8 +728,8 @@ INSERT INTO `t_role` VALUES ('72', '普通用户', '只可查看，好可怜哦'
 -- ----------------------------
 DROP TABLE IF EXISTS `t_role_menu`;
 CREATE TABLE `t_role_menu` (
-  `ROLE_ID` bigint(20) NOT NULL,
-  `MENU_ID` bigint(20) NOT NULL
+  `role_id` bigint(20) NOT NULL,
+  `menu_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
@@ -867,10 +867,10 @@ INSERT INTO `t_role_menu` VALUES ('2', '131');
 -- ----------------------------
 DROP TABLE IF EXISTS `t_test`;
 CREATE TABLE `t_test` (
-  `FIELD1` varchar(20) NOT NULL,
-  `FIELD2` int(11) NOT NULL,
-  `FIELD3` varchar(100) NOT NULL,
-  `CREATE_TIME` datetime NOT NULL
+  `field1` varchar(20) NOT NULL,
+  `field2` int(11) NOT NULL,
+  `field3` varchar(100) NOT NULL,
+  `create_time` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -936,19 +936,19 @@ INSERT INTO `t_test` VALUES ('字段1', '20', 'mrbird19@gmail.com', '2019-01-23 
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user`;
 CREATE TABLE `t_user` (
-  `USER_ID` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `USERNAME` varchar(50) NOT NULL COMMENT '用户名',
-  `PASSWORD` varchar(128) NOT NULL COMMENT '密码',
-  `DEPT_ID` bigint(20) DEFAULT NULL COMMENT '部门ID',
-  `EMAIL` varchar(128) DEFAULT NULL COMMENT '邮箱',
-  `MOBILE` varchar(20) DEFAULT NULL COMMENT '联系电话',
-  `STATUS` char(1) NOT NULL COMMENT '状态 0锁定 1有效',
-  `CREATE_TIME` datetime NOT NULL COMMENT '创建时间',
-  `MODIFY_TIME` datetime DEFAULT NULL COMMENT '修改时间',
-  `LAST_LOGIN_TIME` datetime DEFAULT NULL COMMENT '最近访问时间',
-  `SSEX` char(1) DEFAULT NULL COMMENT '性别 0男 1女 2保密',
-  `DESCRIPTION` varchar(100) DEFAULT NULL COMMENT '描述',
-  `AVATAR` varchar(100) DEFAULT NULL COMMENT '用户头像',
+  `user_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `username` varchar(50) NOT NULL COMMENT '用户名',
+  `password` varchar(128) NOT NULL COMMENT '密码',
+  `dept_id` bigint(20) DEFAULT NULL COMMENT '部门ID',
+  `email` varchar(128) DEFAULT NULL COMMENT '邮箱',
+  `mobile` varchar(20) DEFAULT NULL COMMENT '联系电话',
+  `status` char(1) NOT NULL COMMENT '状态 0锁定 1有效',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `last_login_time` datetime DEFAULT NULL COMMENT '最近访问时间',
+  `ssex` char(1) DEFAULT NULL COMMENT '性别 0男 1女 2保密',
+  `description` varchar(100) DEFAULT NULL COMMENT '描述',
+  `avatar` varchar(100) DEFAULT NULL COMMENT '用户头像',
   PRIMARY KEY (`USER_ID`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -965,13 +965,13 @@ INSERT INTO `t_user` VALUES ('12', 'jack', '552649f10640385d0728a80a4242893e', '
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user_config`;
 CREATE TABLE `t_user_config` (
-  `USER_ID` bigint(20) NOT NULL COMMENT '用户ID',
-  `THEME` varchar(10) DEFAULT NULL COMMENT '系统主题 dark暗色风格，light明亮风格',
-  `LAYOUT` varchar(10) DEFAULT NULL COMMENT '系统布局 side侧边栏，head顶部栏',
-  `MULTI_PAGE` char(1) DEFAULT NULL COMMENT '页面风格 1多标签页 0单页',
-  `FIX_SIDERBAR` char(1) DEFAULT NULL COMMENT '页面滚动是否固定侧边栏 1固定 0不固定',
-  `FIX_HEADER` char(1) DEFAULT NULL COMMENT '页面滚动是否固定顶栏 1固定 0不固定',
-  `COLOR` varchar(20) DEFAULT NULL COMMENT '主题颜色 RGB值',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `theme` varchar(10) DEFAULT NULL COMMENT '系统主题 dark暗色风格，light明亮风格',
+  `layout` varchar(10) DEFAULT NULL COMMENT '系统布局 side侧边栏，head顶部栏',
+  `multi_page` char(1) DEFAULT NULL COMMENT '页面风格 1多标签页 0单页',
+  `fix_siderbar` char(1) DEFAULT NULL COMMENT '页面滚动是否固定侧边栏 1固定 0不固定',
+  `fix_header` char(1) DEFAULT NULL COMMENT '页面滚动是否固定顶栏 1固定 0不固定',
+  `color` varchar(20) DEFAULT NULL COMMENT '主题颜色 RGB值',
   PRIMARY KEY (`USER_ID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -987,8 +987,8 @@ INSERT INTO `t_user_config` VALUES ('12', 'dark', 'side', '1', '1', '1', 'rgb(66
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user_role`;
 CREATE TABLE `t_user_role` (
-  `USER_ID` bigint(20) NOT NULL COMMENT '用户ID',
-  `ROLE_ID` bigint(20) NOT NULL COMMENT '角色ID'
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `role_id` bigint(20) NOT NULL COMMENT '角色ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
