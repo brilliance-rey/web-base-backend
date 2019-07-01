@@ -5,14 +5,14 @@
         <!--
           WARNING - @mbg.generated
         -->
-        <id column="JOB_ID" jdbcType="DECIMAL" property="jobId"/>
-        <result column="BEAN_NAME" jdbcType="VARCHAR" property="beanName"/>
-        <result column="METHOD_NAME" jdbcType="VARCHAR" property="methodName"/>
-        <result column="PARAMS" jdbcType="VARCHAR" property="params"/>
-        <result column="CRON_EXPRESSION" jdbcType="VARCHAR" property="cronExpression"/>
-        <result column="STATUS" jdbcType="CHAR" property="status"/>
-        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
-        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+        <id column="job_id" jdbcType="DECIMAL" property="jobId"/>
+        <result column="bean_name" jdbcType="VARCHAR" property="beanName"/>
+        <result column="method_name" jdbcType="VARCHAR" property="methodName"/>
+        <result column="params" jdbcType="VARCHAR" property="params"/>
+        <result column="cron_expression" jdbcType="VARCHAR" property="cronExpression"/>
+        <result column="status" jdbcType="CHAR" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     </resultMap>
 
     <select id="queryList" resultType="job">
