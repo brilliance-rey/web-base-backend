@@ -1,5 +1,29 @@
 package com.sunkaisens.ibss.system.controller;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.lionsoul.ip2region.DbSearcher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sunkaisens.ibss.common.annotation.Limit;
@@ -11,7 +35,11 @@ import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.common.properties.IBSSProperties;
 import com.sunkaisens.ibss.common.service.RedisService;
-import com.sunkaisens.ibss.common.utils.*;
+import com.sunkaisens.ibss.common.utils.AddressUtil;
+import com.sunkaisens.ibss.common.utils.DateUtil;
+import com.sunkaisens.ibss.common.utils.IPUtil;
+import com.sunkaisens.ibss.common.utils.MD5Util;
+import com.sunkaisens.ibss.common.utils.SunkUtil;
 import com.sunkaisens.ibss.system.dao.LoginLogMapper;
 import com.sunkaisens.ibss.system.domain.LoginLog;
 import com.sunkaisens.ibss.system.domain.User;
@@ -19,20 +47,6 @@ import com.sunkaisens.ibss.system.domain.UserConfig;
 import com.sunkaisens.ibss.system.manager.UserManager;
 import com.sunkaisens.ibss.system.service.LoginLogService;
 import com.sunkaisens.ibss.system.service.UserService;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.lionsoul.ip2region.DbSearcher;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
-import java.util.*;
 
 @Validated
 @RestController
@@ -45,7 +59,7 @@ public class LoginController {
     @Autowired
     private RedisService redisService;
     @Autowired
-    private UserManager userManager;
+    public UserManager userManager;
     @Autowired
     private UserService userService;
     @Autowired
@@ -62,18 +76,21 @@ public class LoginController {
     public SunkResponse login(
             @NotBlank(message = "{required}") String username,
             @NotBlank(message = "{required}") String password, HttpServletRequest request) throws Exception {
-        username = StringUtils.lowerCase(username);
+    	username = StringUtils.lowerCase(username);
+//        password="e47faf93c0d84bd34df6acc217877dd3";
+//    	System.out.println(password);
         password = MD5Util.encrypt(username, password);
-
         final String errorMessage = "用户名或密码错误";
-        User user = this.userManager.getUser(username);
+        //根据用户名查用户信息
+         User user = this.userManager.getUser(username);
 
-        if (user == null)
+        if (user == null) 
             throw new SysInnerException(errorMessage);
-        if (!StringUtils.equals(user.getPassword(), password))
+        if (!StringUtils.equals(user.getPassword(), password)) 
             throw new SysInnerException(errorMessage);
-        if (User.STATUS_LOCK.equals(user.getStatus()))
+        if (User.STATUS_LOCK.equals(user.getStatus())) 
             throw new SysInnerException("账号已被锁定,请联系管理员！");
+            
 
         // 更新用户登录时间
         this.userService.updateLoginTime(username);
@@ -81,16 +98,23 @@ public class LoginController {
         LoginLog loginLog = new LoginLog();
         loginLog.setUsername(username);
         this.loginLogService.saveLoginLog(loginLog);
-
+        
+         //登录生成token 并加密
         String token = SunkUtil.encryptToken(JWTUtil.sign(username, password));
+        //获取当前日期时间和秒数
         LocalDateTime expireTime = LocalDateTime.now().plusSeconds(properties.getShiro().getJwtTimeOut());
+        //格式化时间
         String expireTimeStr = DateUtil.formatFullTime(expireTime);
         JWTToken jwtToken = new JWTToken(token, expireTimeStr);
-
+        //生成一个useerID便于登录的使用 存到redis中 
         String userId = this.saveTokenToRedis(user, jwtToken, request);
         user.setId(userId);
-
-        Map<String, Object> userInfo = this.generateUserInfo(jwtToken, user);
+        
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("token", jwtToken.getToken());
+        userInfo.put("exipreTime", jwtToken.getExipreAt());
+        
+//        Map<String, Object> userInfo = this.generateUserInfo(jwtToken,user);
         return new SunkResponse().message("认证成功").data(userInfo);
     }
 
@@ -108,7 +132,7 @@ public class LoginController {
         List<Map<String, Object>> lastSevenVisitCount = loginLogMapper.findLastSevenDaysVisitCount(null);
         data.put("lastSevenVisitCount", lastSevenVisitCount);
         User param = new User();
-        param.setUsername(username);
+        param.setUsername(username); 
         List<Map<String, Object>> lastSevenUserVisitCount = loginLogMapper.findLastSevenDaysVisitCount(param);
         data.put("lastSevenUserVisitCount", lastSevenUserVisitCount);
         return new SunkResponse().data(data);
@@ -127,7 +151,7 @@ public class LoginController {
                 if (StringUtils.equalsIgnoreCase(username, activeUser.getUsername()))
                     activeUsers.add(activeUser);
             } else {
-                activeUsers.add(activeUser);
+                	activeUsers.add(activeUser);
             }
         }
         return new SunkResponse().data(activeUsers);
@@ -167,6 +191,8 @@ public class LoginController {
         this.userService.regist(username, password);
     }
 
+    
+    
     private String saveTokenToRedis(User user, JWTToken token, HttpServletRequest request) throws Exception {
         String ip = IPUtil.getIpAddr(request);
 
@@ -200,23 +226,62 @@ public class LoginController {
      * @param user  用户信息
      * @return UserInfo
      */
-    private Map<String, Object> generateUserInfo(JWTToken token, User user) {
+    private Map<String, Object> generateUserInfo(JWTToken token,User user) {
         String username = user.getUsername();
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("token", token.getToken());
         userInfo.put("exipreTime", token.getExipreAt());
-
-        Set<String> roles = this.userManager.getUserRoles(username);
-        userInfo.put("roles", roles);
-
-        Set<String> permissions = this.userManager.getUserPermissions(username);
-        userInfo.put("permissions", permissions);
-
-        UserConfig userConfig = this.userManager.getUserConfig(String.valueOf(user.getUserId()));
-        userInfo.put("config", userConfig);
-
-        user.setPassword("it's a secret");
-        userInfo.put("user", user);
+//        /**
+//         	* 通过用户 ID获取前端系统个性化配置
+//         */
+//        UserConfig userConfig = this.userManager.getUserConfig(String.valueOf(user.getUserId()));
+//        userInfo.put("config", userConfig);
+//
+//        Set<String> roles = this.userManager.getUserRoles(username);
+//        userInfo.put("roles", roles);
+//
+//        /**
+//                        * 通过用户名获取用户权限集合
+//         */
+//        Set<String> permissions = this.userManager.getUserPermissions(username);
+//        userInfo.put("permissions", permissions);
+//
+//
+//        user.setPassword("it's a secret");
+//        userInfo.put("user", user);
         return userInfo;
+    }
+    
+    /**
+     * 
+     * xsh  2019/07/18 获取用户的信息通过token
+     */
+    @RequestMapping("/user/info")
+    public SunkResponse generateUser(@NotBlank(message = "{required}") String username) {
+    	Map<String, Object> userInfo = new HashMap<>();
+    	System.out.println("進來了");
+    	if(username !=null && !"".equals(username)) {
+    		username = StringUtils.lowerCase(username);
+    		System.out.println(username);
+    		User user =this.userManager.getUser(username);
+    		/**
+    		 * 通过用户 ID获取前端系统个性化配置
+    		 */
+    		UserConfig userConfig = this.userManager.getUserConfig(String.valueOf(user.getUserId()));
+    		userInfo.put("config", userConfig);
+    		
+    		Set<String> roles =this.userManager.getUserRoles(username);
+    		userInfo.put("roles", roles);
+    		
+    		/**
+    		 * 通过用户名获取用户权限集合
+    		 */
+    		Set<String> permissions = this.userManager.getUserPermissions(username);
+    		userInfo.put("permissions", permissions);
+    		user.setPassword("it's a secret");
+    		userInfo.put("user", user);
+    		System.out.println(userInfo);
+    	}
+    	  return new SunkResponse().data(userInfo);
     }
 }

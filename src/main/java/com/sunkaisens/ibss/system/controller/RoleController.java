@@ -11,6 +11,8 @@ import com.sunkaisens.ibss.system.service.RoleMenuServie;
 import com.sunkaisens.ibss.system.service.RoleService;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.poi.util.SystemOutLogger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -28,26 +30,30 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("role")
 public class RoleController extends BaseController {
-
+     
     @Autowired
     private RoleService roleService;
     @Autowired
     private RoleMenuServie roleMenuServie;
-
     private String message;
-
+    
+    
+    
+    // 获取登陆的时间
     @GetMapping
     @RequiresPermissions("role:view")
     public Map<String, Object> roleList(QueryRequest queryRequest, Role role) {
         return getDataTable(roleService.findRoles(role, queryRequest));
     }
 
+   
     @GetMapping("check/{roleName}")
     public boolean checkRoleName(@NotBlank(message = "{required}") @PathVariable String roleName) {
         Role result = this.roleService.findByName(roleName);
         return result == null;
     }
-
+    
+    //生成菜单栏的个数
     @GetMapping("menu/{roleId}")
     public List<String> getRoleMenus(@NotBlank(message = "{required}") @PathVariable String roleId) {
         List<RoleMenu> list = this.roleMenuServie.getRoleMenusByRoleId(roleId);

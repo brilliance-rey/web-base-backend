@@ -3,13 +3,18 @@ package com.sunkaisens.ibss.system.controller;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
+import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.domain.router.VueRouter;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.system.domain.Menu;
+import com.sunkaisens.ibss.system.domain.User;
+import com.sunkaisens.ibss.system.domain.UserConfig;
 import com.sunkaisens.ibss.system.manager.UserManager;
 import com.sunkaisens.ibss.system.service.MenuService;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -19,8 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Validated
@@ -34,11 +41,25 @@ public class MenuController extends BaseController {
     private UserManager userManager;
     @Autowired
     private MenuService menuService;
-
+     
     @GetMapping("/{username}")
     public ArrayList<VueRouter<Menu>> getUserRouters(@NotBlank(message = "{required}") @PathVariable String username) {
         return this.userManager.getUserRouters(username);
     }
+    
+   /* 
+    @RequestMapping("/router")
+    public SunkResponse generateUser(@NotBlank(message = "{required}") String username) {
+    	ArrayList<VueRouter<Menu>> munu=new ArrayList<VueRouter<Menu>>();
+    	Map<String, Object> userInfo = new HashMap<>();
+    	System.out.println("進來了");
+    	if(username !=null && !"".equals(username)) {
+    	 munu=this.userManager.getUserRouters(username);
+    	 userInfo.put("munu", munu);
+    	}
+    	  return new SunkResponse().data(userInfo);
+    }*/
+    
 
     @GetMapping
     @RequiresPermissions("menu:view")

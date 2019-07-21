@@ -1,6 +1,7 @@
 package com.sunkaisens.ibss.system.manager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Service;
 
 import com.sunkaisens.ibss.common.domain.router.RouterMeta;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.print.attribute.standard.MediaName;
 
 /**
  * 封装一些和 User相关的业务操作
@@ -86,7 +89,7 @@ public class UserManager {
      */
     public ArrayList<VueRouter<Menu>> getUserRouters(String username) {
         List<VueRouter<Menu>> routes = new ArrayList<>();
-        List<Menu> menus = this.menuService.findUserMenus(username);
+        List<Menu> menus = this.menuService.findUserMenus("admin");
         menus.forEach(menu -> {
             VueRouter<Menu> route = new VueRouter<>();
             route.setId(menu.getMenuId().toString());
@@ -98,9 +101,9 @@ public class UserManager {
             route.setMeta(new RouterMeta(true, null));
             routes.add(route);
         });
+        System.out.println(routes);
         return TreeUtil.buildVueRouter(routes);
     }
-
     /**
      * 通过用户 ID获取前端系统个性化配置
      *

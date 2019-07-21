@@ -33,7 +33,7 @@ public class SunkUtil {
     public static <T> T selectCacheByTemplate(CacheSelector<?> cacheSelector, Supplier<?> databaseSelector) {
         try {
             // 先查 Redis缓存
-            log.debug("query data from redis ······");
+             
             return (T) cacheSelector.select();
         } catch (Exception e) {
             // 数据库查询

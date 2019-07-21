@@ -50,7 +50,10 @@ public class ShiroConfig {
         // 配置 Realm
         return new ShiroRealm();
     }
-
+    
+	    /**
+	     * 初始化Authenticator
+	     */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
