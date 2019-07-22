@@ -110,11 +110,11 @@ public class LoginController {
         String userId = this.saveTokenToRedis(user, jwtToken, request);
         user.setId(userId);
         
+        //向前端传递token 封装到Map中
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("token", jwtToken.getToken());
         userInfo.put("exipreTime", jwtToken.getExipreAt());
         
-//        Map<String, Object> userInfo = this.generateUserInfo(jwtToken,user);
         return new SunkResponse().message("认证成功").data(userInfo);
     }
 
@@ -213,45 +213,6 @@ public class LoginController {
 
         return activeUser.getId();
     }
-
-    /**
-     * 生成前端需要的用户信息，包括：
-     * 1. token
-     * 2. Vue Router
-     * 3. 用户角色
-     * 4. 用户权限
-     * 5. 前端系统个性化配置信息
-     *
-     * @param token token
-     * @param user  用户信息
-     * @return UserInfo
-     */
-    private Map<String, Object> generateUserInfo(JWTToken token,User user) {
-        String username = user.getUsername();
-        Map<String, Object> userInfo = new HashMap<>();
-        userInfo.put("token", token.getToken());
-        userInfo.put("exipreTime", token.getExipreAt());
-//        /**
-//         	* 通过用户 ID获取前端系统个性化配置
-//         */
-//        UserConfig userConfig = this.userManager.getUserConfig(String.valueOf(user.getUserId()));
-//        userInfo.put("config", userConfig);
-//
-//        Set<String> roles = this.userManager.getUserRoles(username);
-//        userInfo.put("roles", roles);
-//
-//        /**
-//                        * 通过用户名获取用户权限集合
-//         */
-//        Set<String> permissions = this.userManager.getUserPermissions(username);
-//        userInfo.put("permissions", permissions);
-//
-//
-//        user.setPassword("it's a secret");
-//        userInfo.put("user", user);
-        return userInfo;
-    }
-    
     /**
      * 
      * xsh  2019/07/18 获取用户的信息通过token
