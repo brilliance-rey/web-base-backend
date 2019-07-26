@@ -39,7 +39,7 @@ public class RoleController extends BaseController {
     
     
     
-    // 获取登陆的时间
+    // 获取角色的list    xsh 2019/7/23
     @GetMapping
     @RequiresPermissions("role:view")
     public Map<String, Object> roleList(QueryRequest queryRequest, Role role) {

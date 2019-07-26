@@ -41,7 +41,8 @@ public class MenuController extends BaseController {
     private UserManager userManager;
     @Autowired
     private MenuService menuService;
-     
+    
+    //得到登录用户的路由   徐胜浩  2019/7/23
     @GetMapping("/{username}")
     public ArrayList<VueRouter<Menu>> getUserRouters(@NotBlank(message = "{required}") @PathVariable String username) {
         return this.userManager.getUserRouters(username);

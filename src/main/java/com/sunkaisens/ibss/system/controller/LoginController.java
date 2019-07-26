@@ -77,11 +77,9 @@ public class LoginController {
             @NotBlank(message = "{required}") String username,
             @NotBlank(message = "{required}") String password, HttpServletRequest request) throws Exception {
     	username = StringUtils.lowerCase(username);
-//        password="e47faf93c0d84bd34df6acc217877dd3";
-//    	System.out.println(password);
         password = MD5Util.encrypt(username, password);
         final String errorMessage = "用户名或密码错误";
-        //根据用户名查用户信息
+         //根据用户名查用户信息
          User user = this.userManager.getUser(username);
 
         if (user == null) 
@@ -114,7 +112,6 @@ public class LoginController {
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("token", jwtToken.getToken());
         userInfo.put("exipreTime", jwtToken.getExipreAt());
-        
         return new SunkResponse().message("认证成功").data(userInfo);
     }
 
@@ -213,9 +210,10 @@ public class LoginController {
 
         return activeUser.getId();
     }
+    
     /**
      * 
-     * xsh  2019/07/18 获取用户的信息通过token
+     * xsh  2019/07/18 根据token 获取用户的信息
      */
     @RequestMapping("/user/info")
     public SunkResponse generateUser(@NotBlank(message = "{required}") String username) {

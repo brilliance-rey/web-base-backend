@@ -1,5 +1,25 @@
 package com.sunkaisens.ibss.system.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
@@ -11,18 +31,8 @@ import com.sunkaisens.ibss.system.domain.UserConfig;
 import com.sunkaisens.ibss.system.service.UserConfigService;
 import com.sunkaisens.ibss.system.service.UserService;
 import com.wuwenze.poi.ExcelKit;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import java.util.List;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Validated
@@ -31,7 +41,7 @@ import java.util.Map;
 public class UserController extends BaseController {
 
     private String message;
-
+    
     @Autowired
     private UserService userService;
     @Autowired
@@ -47,6 +57,8 @@ public class UserController extends BaseController {
         return this.userService.findByName(username);
     }
 
+    
+    //获得用户的列表数据 查询   徐胜浩  2019/7/23
     @GetMapping
     @RequiresPermissions("user:view")
     public Map<String, Object> userList(QueryRequest queryRequest, User user) {
@@ -54,9 +66,9 @@ public class UserController extends BaseController {
     }
 
     @Log("新增用户")
-    @PostMapping
-    @RequiresPermissions("user:add")
-    public void addUser(@Valid User user) throws SysInnerException {
+    @PostMapping("/add")
+	@RequiresPermissions("user:add")
+    public void addUser(@Valid @RequestBody User user) throws SysInnerException {
         try {
             this.userService.createUser(user);
         } catch (Exception e) {
@@ -64,12 +76,12 @@ public class UserController extends BaseController {
             log.error(message, e);
             throw new SysInnerException(message);
         }
-    }
+    }  
 
     @Log("修改用户")
     @PutMapping
     @RequiresPermissions("user:update")
-    public void updateUser(@Valid User user) throws SysInnerException {
+    public void updateUser(@Valid @RequestBody User user) throws SysInnerException {
         try {
             this.userService.updateUser(user);
         } catch (Exception e) {
@@ -81,7 +93,7 @@ public class UserController extends BaseController {
 
     @Log("删除用户")
     @DeleteMapping("/{userIds}")
-    @RequiresPermissions("user:delete")
+	@RequiresPermissions("user:delete")
     public void deleteUsers(@NotBlank(message = "{required}") @PathVariable String userIds) throws SysInnerException {
         try {
             String[] ids = userIds.split(StringPool.COMMA);
