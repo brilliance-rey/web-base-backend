@@ -48,13 +48,11 @@ import com.sunkaisens.ibss.system.manager.UserManager;
 import com.sunkaisens.ibss.system.service.LoginLogService;
 import com.sunkaisens.ibss.system.service.UserService;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 @Validated
 @RestController
 @Configuration
-@Api(description = "登录api")
+//@Api(description = "登录api")
 public class LoginController {
 
     @Value("${ibss.ip2region.enabled}")
@@ -76,7 +74,7 @@ public class LoginController {
     private ObjectMapper mapper;
 
 
-    @ApiOperation("用户登陆")
+//    @ApiOperation("用户登陆")
     @PostMapping("/login")
     @Limit(key = "login", period = 60, count = 20, name = "登录接口", prefix = "limit")
     public SunkResponse login(

@@ -79,7 +79,7 @@ febs:
   openAopLog: true
   shiro:
     # 后端免认证接口 url
-    # anonUrl: /login,/logout/**,/regist,/user/check/**,/webjars/**, /swagger-ui.html
+    anonUrl: /login,/logout/**,/regist,/user/check/**,/null,/swagger-ui.html,/webjars,/swagger-resources
     # token有效期，单位秒
     jwtTimeOut: 3600
 
