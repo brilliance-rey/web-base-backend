@@ -48,7 +48,7 @@ public class RoleController extends BaseController {
     
     // 获取角色的list    xsh 2019/7/23
     @GetMapping
-    @RequiresPermissions("role:view")
+    //@RequiresPermissions("role:view")
     public Map<String, Object> roleList(QueryRequest queryRequest, Role role) {
         return getDataTable(roleService.findRoles(role, queryRequest));
     }
