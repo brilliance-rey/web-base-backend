@@ -1,10 +1,10 @@
 package com.sunkaisens.ibss.system.domain;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.ToString;
-
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import lombok.Data;
 
 @TableName("t_login_log")
 @Data

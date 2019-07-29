@@ -1,7 +1,11 @@
 package com.sunkaisens.ibss.system.manager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Service;
 
 import com.sunkaisens.ibss.common.domain.router.RouterMeta;
@@ -17,13 +21,6 @@ import com.sunkaisens.ibss.system.service.MenuService;
 import com.sunkaisens.ibss.system.service.RoleService;
 import com.sunkaisens.ibss.system.service.UserConfigService;
 import com.sunkaisens.ibss.system.service.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.print.attribute.standard.MediaName;
 
 /**
  * 封装一些和 User相关的业务操作

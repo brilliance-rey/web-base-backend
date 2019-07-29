@@ -1,25 +1,29 @@
 package com.sunkaisens.ibss.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sunkaisens.ibss.common.domain.IBSSConstant;
 import com.sunkaisens.ibss.common.domain.QueryRequest;
 import com.sunkaisens.ibss.common.domain.Tree;
 import com.sunkaisens.ibss.common.utils.SortUtil;
-import com.sunkaisens.ibss.common.utils.SunkUtil;
 import com.sunkaisens.ibss.common.utils.TreeUtil;
 import com.sunkaisens.ibss.system.dao.DeptMapper;
 import com.sunkaisens.ibss.system.domain.Dept;
 import com.sunkaisens.ibss.system.service.DeptService;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Slf4j
 @Service("deptService")

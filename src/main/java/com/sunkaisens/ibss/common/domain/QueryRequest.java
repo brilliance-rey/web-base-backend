@@ -1,9 +1,8 @@
 package com.sunkaisens.ibss.common.domain;
 
-import lombok.Data;
-import lombok.ToString;
-
 import java.io.Serializable;
+
+import lombok.Data;
 
 @Data
 public class QueryRequest implements Serializable {

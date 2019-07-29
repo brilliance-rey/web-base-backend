@@ -1,6 +1,14 @@
 server:
   port: 9527
-
+  
+#security:
+#  basic:
+#    enabled: true
+#    path: /swagger-ui.html
+#  user:
+#    name: admin
+#    password: admin
+            
 spring:
   datasource:
     dynamic:
@@ -71,7 +79,7 @@ febs:
   openAopLog: true
   shiro:
     # 后端免认证接口 url
-    anonUrl: /login,/logout/**,/regist,/user/check/**
+    # anonUrl: /login,/logout/**,/regist,/user/check/**,/webjars/**, /swagger-ui.html
     # token有效期，单位秒
     jwtTimeOut: 3600
 
@@ -83,3 +91,5 @@ ibss:
     batch:
       insert:
         num: 1000
+ 
+        

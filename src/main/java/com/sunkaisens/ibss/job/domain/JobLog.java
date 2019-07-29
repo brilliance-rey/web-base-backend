@@ -1,17 +1,17 @@
 package com.sunkaisens.ibss.job.domain;
 
 
+import java.io.Serializable;
+import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.sunkaisens.ibss.common.converter.TimeConverter;
 import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
-import lombok.Data;
-import lombok.ToString;
 
-import java.io.Serializable;
-import java.util.Date;
+import lombok.Data;
 
 @Data
 @TableName("t_job_log")
