@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -102,7 +103,7 @@ public class RoleController extends BaseController {
     @Log("新增角色")
     @PostMapping
     @RequiresPermissions("role:add")
-    public void addRole(@Valid Role role) throws SysInnerException {
+    public void addRole(@Valid @RequestBody Role role) throws SysInnerException {
         try {
             this.roleService.createRole(role);
         } catch (Exception e) {
@@ -129,7 +130,7 @@ public class RoleController extends BaseController {
     @Log("修改角色")
     @PutMapping
     @RequiresPermissions("role:update")
-    public void updateRole(Role role) throws SysInnerException {
+    public void updateRole(@Valid @RequestBody Role role) throws SysInnerException {
         try {
             this.roleService.updateRole(role);
         } catch (Exception e) {
