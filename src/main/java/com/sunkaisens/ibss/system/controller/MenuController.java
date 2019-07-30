@@ -49,7 +49,6 @@ public class MenuController extends BaseController {
     public ArrayList<VueRouter<Menu>> getUserRouters(@NotBlank(message = "{required}") @PathVariable String username) {
         return this.userManager.getUserRouters(username);
     }
-  
     
 
     @GetMapping
