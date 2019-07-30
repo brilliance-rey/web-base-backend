@@ -49,19 +49,7 @@ public class MenuController extends BaseController {
     public ArrayList<VueRouter<Menu>> getUserRouters(@NotBlank(message = "{required}") @PathVariable String username) {
         return this.userManager.getUserRouters(username);
     }
-    
-   /* 
-    @RequestMapping("/router")
-    public SunkResponse generateUser(@NotBlank(message = "{required}") String username) {
-    	ArrayList<VueRouter<Menu>> munu=new ArrayList<VueRouter<Menu>>();
-    	Map<String, Object> userInfo = new HashMap<>();
-    	System.out.println("進來了");
-    	if(username !=null && !"".equals(username)) {
-    	 munu=this.userManager.getUserRouters(username);
-    	 userInfo.put("munu", munu);
-    	}
-    	  return new SunkResponse().data(userInfo);
-    }*/
+  
     
 
     @GetMapping

@@ -49,7 +49,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             List<String> ids = new ArrayList<>();
             buildTrees(trees, menus, ids);
 
-            result.put("ids", ids);
+           // result.put("ids", ids);
             if (StringUtils.equals(menu.getType(), IBSSConstant.TYPE_BUTTON)) {
                 result.put("rows", trees);
             } else {

@@ -6,9 +6,6 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.models.parameters.Parameter;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -28,19 +25,17 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-@ApiImplicitParams({ @ApiImplicitParam(paramType = "header", dataType = "String", name = "token", value = "token标记", required = true) })
+//@ApiImplicitParams({ @ApiImplicitParam(paramType = "header", dataType = "String", name = "token", value = "token标记", required = true) })
 public class SpringFoxConfig {
-
 	@Bean
     public Docket createRestApi() {
-		/* //添加head参数配置start
-		List<Parameter> pars = new ArrayList<>();
+	/*	//添加head参数配置start
         ParameterBuilder tokenPar = new ParameterBuilder();
-        tokenPar.name("Authorization").description("认证token").modelRef(new ModelRef("string")).parameterType("header").required(true).build();
-        pars.add((Parameter) tokenPar.build());
+        List  pars = new ArrayList<>();
+        tokenPar.name("Authorization").description("令牌").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
+        pars.add(tokenPar.build());
         //添加head参数配置end
-*/       
-		return new Docket(DocumentationType.SWAGGER_2)
+*/		return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.sunkaisens.ibss.system.controller"))//这里是controller所处的包名

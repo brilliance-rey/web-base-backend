@@ -1,5 +1,7 @@
 package com.sunkaisens.ibss.system.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import org.apache.poi.ss.formula.functions.IDStarAlgorithm;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -20,12 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
 import com.sunkaisens.ibss.common.domain.QueryRequest;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
+import com.sunkaisens.ibss.system.domain.Menu;
 import com.sunkaisens.ibss.system.domain.Role;
 import com.sunkaisens.ibss.system.domain.RoleMenu;
+import com.sunkaisens.ibss.system.service.MenuService;
 import com.sunkaisens.ibss.system.service.RoleMenuServie;
 import com.sunkaisens.ibss.system.service.RoleService;
 import com.wuwenze.poi.ExcelKit;
@@ -40,6 +46,9 @@ public class RoleController extends BaseController {
      
     @Autowired
     private RoleService roleService;
+    //xsh 2019/7/30 
+    @Autowired
+    private MenuService menuService;
     @Autowired
     private RoleMenuServie roleMenuServie;
     private String message;
@@ -58,6 +67,29 @@ public class RoleController extends BaseController {
     public boolean checkRoleName(@NotBlank(message = "{required}") @PathVariable String roleName) {
         Role result = this.roleService.findByName(roleName);
         return result == null;
+    }
+    
+    //修改的时候默认的显示和全部菜单的显示 xsh 2019/7/30
+    @GetMapping("roleMenu/{roleId}")
+    public Map<String, Object> getRoleMenu(@NotBlank(message = "{required}") @PathVariable String roleId) {
+    	Map<String, Object> result = new HashMap<>();
+        //获取role角色的id
+    	List<String> ids = new ArrayList<>();
+    	List<RoleMenu> list = this.roleMenuServie.getRoleMenusByRoleId(roleId);
+    	//获得角色id
+        for (RoleMenu roleMenu : list) {
+		String roleMenuStr	=roleMenu.getMenuId().toString();
+		ids.add(roleMenuStr);
+		}
+        //获取全部的菜单
+        Menu menu = new Menu();
+        Map<String, Object> menusNum=this.menuService.findMenus(menu);
+        result.put("ids", ids);
+        result.put("rows", menusNum);
+        
+        System.out.println(result);
+        return  result;
+        //return list.stream().map(roleMenu -> String.valueOf(roleMenu.getMenuId())).collect(Collectors.toList());
     }
     
     //生成菜单栏的个数
