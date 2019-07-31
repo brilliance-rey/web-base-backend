@@ -86,7 +86,7 @@ public class RoleController extends BaseController {
         //获取全部的菜单
         Menu menu = new Menu();
         Map<String, Object> menusNum=this.menuService.findMenus(menu);
-        result.put("menuId", ids);
+        result.put("menuIds", ids);
         result.put("rows", menusNum);
         
         System.out.println(result);
