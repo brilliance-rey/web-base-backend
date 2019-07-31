@@ -45,11 +45,11 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
                 match = true;
         }
         if (match) return true;
-        return executeLogin(request, response);
-        /*if (isLoginAttempt(request, response)) {
+       // return executeLogin(request, response);
+        if (isLoginAttempt(request, response)) {
         	return executeLogin(request, response);
         }
-        return false;*/
+        return false;
     }
 
     @Override

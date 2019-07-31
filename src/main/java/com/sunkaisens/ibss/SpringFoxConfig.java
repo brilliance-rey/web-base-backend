@@ -7,13 +7,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -25,24 +27,50 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-//@ApiImplicitParams({ @ApiImplicitParam(paramType = "header", dataType = "String", name = "token", value = "token标记", required = true) })
 public class SpringFoxConfig {
 	@Bean
     public Docket createRestApi() {
-	/*	//添加head参数配置start
-        ParameterBuilder tokenPar = new ParameterBuilder();
-        List  pars = new ArrayList<>();
-        tokenPar.name("Authorization").description("令牌").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
-        pars.add(tokenPar.build());
-        //添加head参数配置end
-*/		return new Docket(DocumentationType.SWAGGER_2)
+	return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.sunkaisens.ibss.system.controller"))//这里是controller所处的包名
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts());
+               
     }
-    
+	
+	//通过Swagger2的securitySchemes配置全局参数：如下列代码所示，securitySchemes的ApiKey中增加一个名为“Authorization”，type为“header”的参数。
+	private List<ApiKey> securitySchemes() {
+		 List<ApiKey> apiKeyList= new ArrayList();
+		 apiKeyList.add(new ApiKey("Authorization", "Authorization", "header"));
+		 return apiKeyList;
+	 }  
+	//设置完成后进入SwaggerUI，右上角出现“Authorization”按钮，点击即可输入我们配置的参数。
+	//对于不需要输入参数的接口（上文所述的包含auth的接口），在未输入Authorization参数就可以访问。
+	//其他接口则将返回401错误。点击右上角“Authorization”按钮，输入配置的参数后即可访问。参数输入后全局有效，无需每个接口单独输入。
+	//至此，完成Swagger2 非全局、无需重复输入的Head参数配置。
+	//Swagger2的相关完整代码如下（工程基于Springboot）：
+	private List<SecurityContext> securityContexts() {
+		List<SecurityContext> securityContexts=new ArrayList<>();
+		securityContexts.add(
+                SecurityContext.builder()
+                        .securityReferences(defaultAuth())
+                        .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                        .build());
+		return securityContexts;
+    }
+
+	List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        List<SecurityReference> securityReferences=new ArrayList<>();
+        securityReferences.add(new SecurityReference("Authorization", authorizationScopes));
+        return securityReferences;
+    }
+	
 	//构建api文档的详细信息函数
     private ApiInfo apiInfo() {
         		 return new ApiInfoBuilder()
