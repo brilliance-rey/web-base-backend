@@ -37,6 +37,7 @@ import com.sunkaisens.ibss.system.service.RoleMenuServie;
 import com.sunkaisens.ibss.system.service.RoleService;
 import com.wuwenze.poi.ExcelKit;
 
+import io.swagger.annotations.ApiImplicitParam;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -102,7 +103,7 @@ public class RoleController extends BaseController {
 
     @Log("新增角色")
     @PostMapping
-    @RequiresPermissions("role:add")
+    //@RequiresPermissions("role:add")
     public void addRole(@Valid @RequestBody Role role) throws SysInnerException {
         try {
             this.roleService.createRole(role);

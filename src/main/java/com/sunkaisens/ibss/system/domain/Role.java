@@ -40,6 +40,9 @@ public class Role implements Serializable {
 
     private transient String createTimeFrom;
     private transient String createTimeTo;
-    private transient String menuId;
+   // private transient String  menuId;
+    
+    //xsh 2019/7/31 定义一个 menuId 的数组
+    private transient String[] menuId;
 
 }

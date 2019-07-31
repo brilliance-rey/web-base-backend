@@ -77,8 +77,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public void createRole(Role role) {
         role.setCreateTime(new Date());
         this.save(role);
-
-        String[] menuIds = role.getMenuId().split(StringPool.COMMA);
+        //xsh2019/7/31  用来获得新增menuid数组
+        String[] menuIds  =role.getMenuId();
+        //String[] menuIds = role.getMenuId().split(StringPool.COMMA);
         setRoleMenus(role, menuIds);
     }
 
@@ -110,9 +111,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
         roleMenuMapper.delete(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, role.getRoleId()));
 
-        String[] menuIds = role.getMenuId().split(StringPool.COMMA);
+        
+        //xsh2019/7/31  用来获得修改的menuid数组
+        String[] menuIds = role.getMenuId();
+        //String[] menuIds = role.getMenuId().split(StringPool.COMMA);
         setRoleMenus(role, menuIds);
-
         // 重新将这些用户的角色和权限缓存到 Redis中
         this.userManager.loadUserPermissionRoleRedisCache(userIds);
     }

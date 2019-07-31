@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -48,13 +49,18 @@ import com.sunkaisens.ibss.system.manager.UserManager;
 import com.sunkaisens.ibss.system.service.LoginLogService;
 import com.sunkaisens.ibss.system.service.UserService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import net.sf.saxon.functions.ConstantFunction.False;
+
 
 @Validated
 @RestController
 @Configuration
-//@Api(description = "登录api")
+@Api(description="登陆的实现")
 public class LoginController {
-
+	
     @Value("${ibss.ip2region.enabled}")
 	private boolean ip2RegionEn;
 	    
@@ -73,13 +79,13 @@ public class LoginController {
     @Autowired
     private ObjectMapper mapper;
 
-
-//    @ApiOperation("用户登陆")
+    @ApiOperation(value="用户登陆", notes="根据用户名和密码 string类型")
+   // @ApiImplicitParam(name = "Authentication", value = "用户名/密码", required = true, dataType = "string")
     @PostMapping("/login")
     @Limit(key = "login", period = 60, count = 20, name = "登录接口", prefix = "limit")
     public SunkResponse login(
-            @NotBlank(message = "{required}") String username,
-            @NotBlank(message = "{required}") String password, HttpServletRequest request) throws Exception {
+            @NotBlank(message = "{required}")@RequestParam String username,
+            @NotBlank(message = "{required}")@RequestParam String password, HttpServletRequest request) throws Exception {
     	username = StringUtils.lowerCase(username);
         password = MD5Util.encrypt(username, password);
         final String errorMessage = "用户名或密码错误";
