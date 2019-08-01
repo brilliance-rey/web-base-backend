@@ -125,6 +125,8 @@ public class LoginController {
         return new SunkResponse().message("认证成功").data(userInfo);
     }
 
+    
+    //生成登录的日志文件   xsh 2019/8/1
     @GetMapping("index/{username}")
     public SunkResponse index(@NotBlank(message = "{required}") @PathVariable String username) {
         Map<String, Object> data = new HashMap<>();
@@ -167,17 +169,24 @@ public class LoginController {
     @DeleteMapping("kickout/{id}")
     @RequiresPermissions("user:kickout")
     public void kickout(@NotBlank(message = "{required}") @PathVariable String id) throws Exception {
+    	//获取最新的时间
         String now = DateUtil.formatFullTime(LocalDateTime.now());
+        //获取最新时间的数据 
         Set<String> userOnlineStringSet = redisService.zrangeByScore(IBSSConstant.ACTIVE_USERS_ZSET_PREFIX, now, "+inf");
         ActiveUser kickoutUser = null;
         String kickoutUserString = "";
         for (String userOnlineString : userOnlineStringSet) {
+        	//遍历数据的定义到ActiveUser用户上
             ActiveUser activeUser = mapper.readValue(userOnlineString, ActiveUser.class);
+            //判断是不是同一个用户id
             if (StringUtils.equals(activeUser.getId(), id)) {
+            	//进行赋值
                 kickoutUser = activeUser;
                 kickoutUserString = userOnlineString;
             }
         }
+        
+        //判断信息是否为空 如果不为空清楚redies的数据
         if (kickoutUser != null && StringUtils.isNotBlank(kickoutUserString)) {
             // 删除 zset中的记录
             redisService.zrem(IBSSConstant.ACTIVE_USERS_ZSET_PREFIX, kickoutUserString);
@@ -186,11 +195,15 @@ public class LoginController {
         }
     }
 
+    
+    //退出登录     xsh 2019/8/1
     @GetMapping("logout/{id}")
     public void logout(@NotBlank(message = "{required}") @PathVariable String id) throws Exception {
+    	System.out.println(id);
         this.kickout(id);
     }
-
+  
+    //注册用户
     @PostMapping("regist")
     public void regist(
             @NotBlank(message = "{required}") String username,
