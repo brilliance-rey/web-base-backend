@@ -50,7 +50,7 @@ public class MenuController extends BaseController {
         return this.userManager.getUserRouters(username);
     }
     
-
+    //获取菜单表中全部的菜单  xsh  2019/8/1    
     @GetMapping
     @RequiresPermissions("menu:view")
     public Map<String, Object> menuList(Menu menu) {
@@ -87,7 +87,7 @@ public class MenuController extends BaseController {
     @Log("修改菜单/按钮")
     @PutMapping
     @RequiresPermissions("menu:update")
-    public void updateMenu(@Valid Menu menu) throws SysInnerException {
+    public void updateMenu(@Valid  Menu menu) throws SysInnerException {
         try {
             this.menuService.updateMenu(menu);
         } catch (Exception e) {

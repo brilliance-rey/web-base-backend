@@ -75,10 +75,10 @@ public class RoleController extends BaseController {
     @GetMapping("roleMenu/{roleId}")
     public Map<String, Object> getRoleMenu(@NotBlank(message = "{required}") @PathVariable String roleId) {
     	Map<String, Object> result = new HashMap<>();
-        //获取role角色的id
+        //获取登录role全部关联的menu信息
     	List<String> ids = new ArrayList<>();
     	List<RoleMenu> list = this.roleMenuServie.getRoleMenusByRoleId(roleId);
-    	//获得角色id
+    	//获得角色id关联的menuid
         for (RoleMenu roleMenu : list) {
 		String roleMenuStr	=roleMenu.getMenuId().toString();
 		ids.add(roleMenuStr);
@@ -88,16 +88,15 @@ public class RoleController extends BaseController {
         Map<String, Object> menusNum=this.menuService.findMenus(menu);
         result.put("menuIds", ids);
         result.put("rows", menusNum);
-        
-        System.out.println(result);
         return  result;
         //return list.stream().map(roleMenu -> String.valueOf(roleMenu.getMenuId())).collect(Collectors.toList());
     }
     
-    //生成菜单栏的个数
+    //生成菜单栏的个数  即menuid  xsh 2019/8/1
     @GetMapping("menu/{roleId}")
     public List<String> getRoleMenus(@NotBlank(message = "{required}") @PathVariable String roleId) {
         List<RoleMenu> list = this.roleMenuServie.getRoleMenusByRoleId(roleId);
+        //list.stream().map方法 把数据转成string的类型 xsh 2019/8/1
         return list.stream().map(roleMenu -> String.valueOf(roleMenu.getMenuId())).collect(Collectors.toList());
     }
 

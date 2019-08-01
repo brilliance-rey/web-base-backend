@@ -81,6 +81,4 @@ public class SpringFoxConfig {
         	                .version("1.0")  //版本号
         	                .build();
     }
-
-	
 }
