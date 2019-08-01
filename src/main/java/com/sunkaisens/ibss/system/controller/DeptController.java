@@ -39,8 +39,9 @@ public class DeptController extends BaseController {
     @Log("新增部门")
     @PostMapping
     @RequiresPermissions("dept:add")
-    public void addDept(@Valid Dept dept) throws SysInnerException {
+    public void addDept(@Valid @RequestBody Dept dept) throws SysInnerException {
         try {
+        	System.out.println();
             this.deptService.createDept(dept);
         } catch (Exception e) {
             message = "新增部门失败";
@@ -66,7 +67,7 @@ public class DeptController extends BaseController {
     @Log("修改部门")
     @PutMapping
     @RequiresPermissions("dept:update")
-    public void updateDept(@Valid Dept dept) throws SysInnerException {
+    public void updateDept(@Valid @RequestBody Dept dept) throws SysInnerException {
         try {
             this.deptService.updateDept(dept);
         } catch (Exception e) {
