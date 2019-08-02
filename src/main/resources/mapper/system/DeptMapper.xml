@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sunkaisens.ibss.system.dao.DeptMapper">
-    <!-- 递归删除菜单，findDeptChildren为自定义的 MySQL函数，作用为根据当前 deptId递归查找出其所有下级部门 -->
-    <delete id="deleteDepts" parameterType="string">
-        DELETE
-        FROM
-            t_dept
-        WHERE
-            dept_id IN ( SELECT d.dept_id FROM ( SELECT dept_id FROM t_dept WHERE FIND_IN_SET( dept_id, findDeptChildren ( #{deptId} ) ) > 0 ) d )
+    <!-- 删除带子级的数据 用 union all 求出来 子级和父级的数据
+      SELECT T.DEPT_ID,T.PARENT_ID,T.DEPT_NAME   FROM T_DEPT T WHERE  T.DEPT_ID= #{deptId}
+           UNION ALL
+         SELECT t.DEPT_ID,t.PARENT_ID,t.DEPT_NAME from T_DEPT T JOIN  T_DEPT P ON T.PARENT_ID=P.DEPT_ID-->
+  <delete id="deleteDepts" parameterType="string">
+	 DELETE FROM T_DEPT WHERE 
+	      DEPT_ID IN
+	    (SELECT M.DEPT_ID FROM
+	      (SELECT T.DEPT_ID,T.PARENT_ID,T.DEPT_NAME   FROM T_DEPT T WHERE  T.DEPT_ID= #{deptId}
+	           UNION ALL
+	         SELECT t.DEPT_ID,t.PARENT_ID,t.DEPT_NAME from T_DEPT T JOIN  T_DEPT P ON T.PARENT_ID=P.DEPT_ID)M)
     </delete>
 </mapper>
