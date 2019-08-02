@@ -28,6 +28,7 @@ import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.common.utils.MD5Util;
 import com.sunkaisens.ibss.system.domain.User;
 import com.sunkaisens.ibss.system.domain.UserConfig;
+import com.sunkaisens.ibss.system.manager.UserManager;
 import com.sunkaisens.ibss.system.service.UserConfigService;
 import com.sunkaisens.ibss.system.service.UserService;
 import com.wuwenze.poi.ExcelKit;
@@ -46,7 +47,7 @@ public class UserController extends BaseController {
     private UserService userService;
     @Autowired
     private UserConfigService userConfigService;
-
+    
     @GetMapping("check/{username}")
     public boolean checkUserName(@NotBlank(message = "{required}") @PathVariable String username) {
         return this.userService.findByName(username) == null;

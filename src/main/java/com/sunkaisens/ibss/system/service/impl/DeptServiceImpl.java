@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import com.sunkaisens.ibss.common.utils.SortUtil;
 import com.sunkaisens.ibss.common.utils.TreeUtil;
 import com.sunkaisens.ibss.system.dao.DeptMapper;
 import com.sunkaisens.ibss.system.domain.Dept;
+import com.sunkaisens.ibss.system.manager.UserManager;
 import com.sunkaisens.ibss.system.service.DeptService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service("deptService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
-
+	
 
     @Override
     public Map<String, Object> findDepts(QueryRequest request, Dept dept) {
