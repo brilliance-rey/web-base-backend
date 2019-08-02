@@ -11,6 +11,6 @@
 	    (SELECT M.DEPT_ID FROM
 	      (SELECT T.DEPT_ID,T.PARENT_ID,T.DEPT_NAME   FROM T_DEPT T WHERE  T.DEPT_ID= #{deptId}
 	           UNION ALL
-	         SELECT t.DEPT_ID,t.PARENT_ID,t.DEPT_NAME from T_DEPT T JOIN  T_DEPT P ON T.PARENT_ID=P.DEPT_ID)M)
+	         SELECT t.DEPT_ID,t.PARENT_ID,t.DEPT_NAME from T_DEPT T JOIN  T_DEPT P ON P.DEPT_ID=#{deptId})M)
     </delete>
 </mapper>
