@@ -50,13 +50,6 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         return result;
     }
 
-    
-    @Override
-	public Map<String, Object> findDeptsNew(Dept dept) {
-		// TODO 自动生成的方法存根
-		return null;
-	}
-
     @Override
     public List<Dept> findDepts(Dept dept, QueryRequest request) {
         QueryWrapper<Dept> queryWrapper = new QueryWrapper<>();
@@ -109,7 +102,4 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
             trees.add(tree);
         });
     }
-
-	
-	
 }

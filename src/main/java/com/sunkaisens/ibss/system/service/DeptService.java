@@ -19,7 +19,4 @@ public interface DeptService extends IService<Dept> {
     void updateDept(Dept dept);
 
     void deleteDepts(String[] deptIds);
-    
-    //条件查询带子级的数据  xsh 2019/8/2 
-    public  Map<String, Object> findDeptsNew(Dept dept);
 }

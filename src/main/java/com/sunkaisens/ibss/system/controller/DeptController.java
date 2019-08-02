@@ -56,8 +56,6 @@ public class DeptController extends BaseController {
     public void deleteDepts(@NotBlank(message = "{required}") @PathVariable String deptIds) throws SysInnerException {
         try {
             String[] ids = deptIds.split(StringPool.COMMA);
-             Dept dept = new Dept();
-            
             this.deptService.deleteDepts(ids);
         } catch (Exception e) {
             message = "删除部门失败";
