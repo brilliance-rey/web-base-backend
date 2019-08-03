@@ -72,6 +72,7 @@ public class DeptController extends BaseController {
             throw new SysInnerException(message);
         }
     }
+    
 	/**
 	 *  xsh 2019/8/2
 	 * @param dept
@@ -98,7 +99,7 @@ public class DeptController extends BaseController {
     	 if (parentId!=0) {
     		 //在判断 如果有用户再用部门不让删 否则可以删除
     		 if (count!=0) {
-    			 result.put("state",2);
+    			 result.put("state",0);
     			 result.put("message", "有用户关联本部门，不可删除");
     		 }else {
     			 try {
@@ -108,7 +109,7 @@ public class DeptController extends BaseController {
     			 } catch (Exception e) {
     				 message = "删除部门失败";
     				 log.error(message, e); 
-    				 result.put("state", 3);
+    				 result.put("state", 0);
     				 result.put("message", "删除部门失败");
     				 throw new SysInnerException(message);
     			 }
