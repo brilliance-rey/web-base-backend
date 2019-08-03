@@ -28,6 +28,7 @@ import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
 import com.sunkaisens.ibss.common.domain.QueryRequest;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
+import com.sunkaisens.ibss.system.dao.DeptMapper;
 import com.sunkaisens.ibss.system.dao.UserMapper;
 import com.sunkaisens.ibss.system.domain.Dept;
 import com.sunkaisens.ibss.system.domain.User;
@@ -35,6 +36,7 @@ import com.sunkaisens.ibss.system.service.DeptService;
 import com.wuwenze.poi.ExcelKit;
 
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.swagger.web.SwaggerApiListingReader;
 
 @Slf4j
 @Validated
@@ -49,6 +51,9 @@ public class DeptController extends BaseController {
     
     @Autowired
 	private UserMapper userMapper;
+    @Autowired
+	private DeptMapper deptMapper;
+    
     @GetMapping
     public Map<String, Object> deptList(QueryRequest request, Dept dept) {
         return this.deptService.findDepts(request, dept);
@@ -91,39 +96,37 @@ public class DeptController extends BaseController {
     @RequiresPermissions("dept:delete")
     public Map<String, Object> deleteDeptsNew(@NotBlank(message = "{required}") @PathVariable String deptIds) throws SysInnerException {
     	 Map<String,Object> result = new HashMap<>();
-    	 User user = new User();
-    	/*try {
-            String[] ids = deptIds.split(StringPool.COMMA);
-            this.deptService.deleteDepts(ids);
-            
-        } catch (Exception e) {
-            message = "删除部门失败";
-            log.error(message, e);
-            throw new SysInnerException(message);
-        }*/
+    	 Dept dept = new Dept(); //实例化一个部门
     	 String[] ids = deptIds.split(StringPool.COMMA);
     	 Integer  count   =null;
+    	 Long parentId=null;
     	  //遍历获得用户部门id
     	 for (String string : ids) {
     		  Long deptId =Long.valueOf(string);
+    		  dept =this.deptMapper.selectById(deptId);
+    		  parentId =dept.getParentId();
     		  //通过部门id 获得在用的条数
     		  count=this.userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getDeptId, deptId));   		 
     	 }
-    	 //如果有用户再用  部门不让删    否则可以删除
-    	 if (count>0) {
-				result.put("flase", "0");
-				result.put("message", "有用户关联本部门，不可删除");
-		}else {
-			try {
-				this.deptService.deleteDepts(ids);
-				result.put("success", "1");
-				result.put("message", "删除成功");
-			} catch (Exception e) {
-				  message = "删除部门失败";
-		          log.error(message, e);
-		          throw new SysInnerException(message);
-			}
-		}
+    	 //先判断是不是父级菜单 如果不是可删除
+    	 if (parentId!=0) {
+    		 //在判断 如果有用户再用部门不让删 否则可以删除
+    		 if (count!=0) {
+    			 result.put("message", "有用户关联本部门，不可删除");
+    		 }else {
+    			 try {
+    				 this.deptService.deleteDepts(ids);
+    				 result.put("message", "删除成功");
+    			 } catch (Exception e) {
+    				 message = "删除部门失败";
+    				 log.error(message, e); 
+    				 result.put("message", "删除部门失败");
+    				 throw new SysInnerException(message);
+    			 }
+    		 }
+    	 }else {
+    		 result.put("message", "父级菜单不可删除");
+    	 }
     	return result;
     }
     
