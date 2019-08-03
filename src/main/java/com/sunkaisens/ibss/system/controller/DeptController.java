@@ -98,12 +98,12 @@ public class DeptController extends BaseController {
     	 if (parentId!=0) {
     		 //在判断 如果有用户再用部门不让删 否则可以删除
     		 if (count!=0) {
-    			 result.put("state", 2);
+    			 result.put("state",2);
     			 result.put("message", "有用户关联本部门，不可删除");
     		 }else {
     			 try {
     				 this.deptService.deleteDepts(ids);
-    				 result.put("state", 0);
+    				 result.put("state", 1);
     				 result.put("message", "删除成功");
     			 } catch (Exception e) {
     				 message = "删除部门失败";
@@ -114,7 +114,7 @@ public class DeptController extends BaseController {
     			 }
     		 }
     	 }else {
-    		 result.put("state", 1);
+    		 result.put("state", 0);
     		 result.put("message", "父级菜单不可删除");
     	 }
     	return result;
