@@ -72,20 +72,6 @@ public class DeptController extends BaseController {
             throw new SysInnerException(message);
         }
     }
-
-    @Log("删除部门")
-    @DeleteMapping("/{deptIds}")
-    @RequiresPermissions("dept:delete")
-    public void deleteDepts(@NotBlank(message = "{required}") @PathVariable String deptIds) throws SysInnerException {
-    	try {
-            String[] ids = deptIds.split(StringPool.COMMA);
-            this.deptService.deleteDepts(ids);
-        } catch (Exception e) {
-            message = "删除部门失败";
-            log.error(message, e);
-            throw new SysInnerException(message);
-        }
-    }
 	/**
 	 *  xsh 2019/8/2
 	 * @param dept
@@ -112,19 +98,23 @@ public class DeptController extends BaseController {
     	 if (parentId!=0) {
     		 //在判断 如果有用户再用部门不让删 否则可以删除
     		 if (count!=0) {
+    			 result.put("state", 2);
     			 result.put("message", "有用户关联本部门，不可删除");
     		 }else {
     			 try {
     				 this.deptService.deleteDepts(ids);
+    				 result.put("state", 0);
     				 result.put("message", "删除成功");
     			 } catch (Exception e) {
     				 message = "删除部门失败";
     				 log.error(message, e); 
+    				 result.put("state", 3);
     				 result.put("message", "删除部门失败");
     				 throw new SysInnerException(message);
     			 }
     		 }
     	 }else {
+    		 result.put("state", 1);
     		 result.put("message", "父级菜单不可删除");
     	 }
     	return result;
