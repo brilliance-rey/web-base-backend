@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,7 +61,7 @@ public class MenuController extends BaseController {
     @Log("新增菜单/按钮")
     @PostMapping
     @RequiresPermissions("menu:add")
-    public void addMenu(@Valid Menu menu) throws SysInnerException {
+    public void addMenu(@Valid @RequestBody Menu menu) throws SysInnerException {
         try {
             this.menuService.createMenu(menu);
         } catch (Exception e) {
@@ -87,7 +88,7 @@ public class MenuController extends BaseController {
     @Log("修改菜单/按钮")
     @PutMapping
     @RequiresPermissions("menu:update")
-    public void updateMenu(@Valid  Menu menu) throws SysInnerException {
+    public void updateMenu(@Valid @RequestBody Menu menu) throws SysInnerException {
         try {
             this.menuService.updateMenu(menu);
         } catch (Exception e) {
