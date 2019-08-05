@@ -45,13 +45,12 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
                 match = true;
         }
         if (match) return true;
-       // return executeLogin(request, response);
         if (isLoginAttempt(request, response)) {
         	return executeLogin(request, response);
         }
         return false;
     }
-
+     //判断用户是否想要登入。* 检测header里面是否包含Authorization字段即可
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
@@ -59,6 +58,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         return token != null;
     }
 
+   // 如果没有抛出异常则代表登入成功，返回true
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;

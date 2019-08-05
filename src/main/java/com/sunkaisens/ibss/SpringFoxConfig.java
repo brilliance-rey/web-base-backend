@@ -44,8 +44,8 @@ public class SpringFoxConfig {
 	//通过Swagger2的securitySchemes配置全局参数：如下列代码所示，securitySchemes的ApiKey中增加一个名为“Authorization”，type为“header”的参数。
 	private List<ApiKey> securitySchemes() {
 		 List<ApiKey> apiKeyList= new ArrayList();
-		 apiKeyList.add(new ApiKey("Authorization", "Authorization", "header"));
-		 return apiKeyList;
+		 apiKeyList.add(new ApiKey("Authentication", "Authentication", "header"));
+		 return apiKeyList; 
 	 }  
 	//设置完成后进入SwaggerUI，右上角出现“Authorization”按钮，点击即可输入我们配置的参数。
 	//对于不需要输入参数的接口（上文所述的包含auth的接口），在未输入Authorization参数就可以访问。
@@ -67,7 +67,7 @@ public class SpringFoxConfig {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         List<SecurityReference> securityReferences=new ArrayList<>();
-        securityReferences.add(new SecurityReference("Authorization", authorizationScopes));
+        securityReferences.add(new SecurityReference("Authentication", authorizationScopes));
         return securityReferences;
     }
 	

@@ -31,14 +31,15 @@ public class ShiroConfig {
 
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         
+        //authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         filterChainDefinitionMap.put("/resources/**", "anon");
         filterChainDefinitionMap.put("/webjars/**", "anon");
-        filterChainDefinitionMap.put("/null/**", "anon"); 
+      /*  filterChainDefinitionMap.put("/null/**", "anon"); 
         filterChainDefinitionMap.put("/v2/**", "anon");
         filterChainDefinitionMap.put("/csrf/**", "anon");
-        filterChainDefinitionMap.put("/", "anon");
+        filterChainDefinitionMap.put("/", "anon");*/
         
         // 所有请求都要经过 jwt过滤器
         filterChainDefinitionMap.put("/**", "jwt");
