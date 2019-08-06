@@ -20,11 +20,12 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
-
 /***
  * 指定API文档页的标题和描述信息等内容。
  * @param <Parameter>
  */
+/*关键是在securitySchemes()方法配置里增加需要token的配置。
+    配置完成后，swagger-ui.html里右上角会有一个Authorize的按钮，录入该token即能成功调用相关接口*/
 @Configuration
 @EnableSwagger2
 public class SpringFoxConfig {
@@ -40,10 +41,13 @@ public class SpringFoxConfig {
                 .securityContexts(securityContexts());
                
     }
-	
-	//通过Swagger2的securitySchemes配置全局参数：如下列代码所示，securitySchemes的ApiKey中增加一个名为“Authorization”，type为“header”的参数。
+	/**
+	 * 通过Swagger2的securitySchemes配置全局参数：如下列代码所示，securitySchemes的ApiKey中增加一个名为“Authentication”，type为“header”的参数。
+	 *   
+	 */
 	private List<ApiKey> securitySchemes() {
 		 List<ApiKey> apiKeyList= new ArrayList();
+		 //注意下面的名字Authentication要和token请求的名字一直。 
 		 apiKeyList.add(new ApiKey("Authentication", "Authentication", "header"));
 		 return apiKeyList; 
 	 }  
