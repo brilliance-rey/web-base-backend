@@ -59,7 +59,7 @@ public class MenuController extends BaseController {
     
     //获取菜单表中全部的菜单  xsh  2019/8/1    
     @GetMapping
-    @RequiresPermissions("menu:view")
+   // @RequiresPermissions("menu:view")
     public Map<String, Object> menuList(Menu menu) {
         return this.menuService.findMenus(menu);
     }
