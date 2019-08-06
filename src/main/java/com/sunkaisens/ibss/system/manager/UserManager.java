@@ -86,7 +86,7 @@ public class UserManager {
      */
     public ArrayList<VueRouter<Menu>> getUserRouters(String username) {
         List<VueRouter<Menu>> routes = new ArrayList<>();
-        List<Menu> menus = this.menuService.findUserMenus("admin");
+        List<Menu> menus = this.menuService.findUserMenus(username);
         menus.forEach(menu -> {
             VueRouter<Menu> route = new VueRouter<>();
             route.setId(menu.getMenuId().toString());

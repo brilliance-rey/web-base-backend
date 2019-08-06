@@ -1,10 +1,10 @@
 package com.sunkaisens.ibss.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.sunkaisens.ibss.system.domain.Menu;
-
 import java.util.List;
 import java.util.Map;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.sunkaisens.ibss.system.domain.Menu;
 
 public interface MenuService extends IService<Menu> {
 
@@ -21,10 +21,10 @@ public interface MenuService extends IService<Menu> {
     void updateMenu(Menu menu) throws Exception;
 
     /**
-     * 递归删除菜单/按钮
+             * 删除菜单/按钮
      *
      * @param menuIds menuIds
      */
-    void deleteMeuns(String[] menuIds) throws Exception;
+    Map<String, Object> deleteMeuns(String[] menuIds) throws Exception;
 
 }

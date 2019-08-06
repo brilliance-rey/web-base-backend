@@ -20,7 +20,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
     List<String> findUserIdsByMenuId(String menuId);
 
     /**
-     * 递归删除菜单/按钮
+     * 删除菜单/按钮
      *
      * @param menuId menuId
      */

@@ -1,6 +1,7 @@
 package com.sunkaisens.ibss.system.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +26,14 @@ import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
 import com.sunkaisens.ibss.common.domain.router.VueRouter;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
+import com.sunkaisens.ibss.system.dao.MenuMapper;
 import com.sunkaisens.ibss.system.domain.Menu;
 import com.sunkaisens.ibss.system.manager.UserManager;
 import com.sunkaisens.ibss.system.service.MenuService;
 import com.wuwenze.poi.ExcelKit;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sf.saxon.expr.Component.M;
 
 @Slf4j
 @Validated
@@ -44,6 +47,9 @@ public class MenuController extends BaseController {
     private UserManager userManager;
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    protected MenuMapper menuMapper;
     
     //得到登录用户的路由   徐胜浩  2019/7/23
     @GetMapping("/{username}")
@@ -57,7 +63,7 @@ public class MenuController extends BaseController {
     public Map<String, Object> menuList(Menu menu) {
         return this.menuService.findMenus(menu);
     }
-
+    
     @Log("新增菜单/按钮")
     @PostMapping
     @RequiresPermissions("menu:add")
@@ -71,18 +77,28 @@ public class MenuController extends BaseController {
         }
     }
 
+    /**
+              * 删除的修改     xsh  2019/8/6
+     * @param menuIds
+     * @throws SysInnerException
+     */
     @Log("删除菜单/按钮")
     @DeleteMapping("/{menuIds}")
     @RequiresPermissions("menu:delete")
-    public void deleteMenus(@NotBlank(message = "{required}") @PathVariable String menuIds) throws SysInnerException {
-        try {
-            String[] ids = menuIds.split(StringPool.COMMA);
-            this.menuService.deleteMeuns(ids);
-        } catch (Exception e) {
-            message = "删除菜单/按钮失败";
-            log.error(message, e);
-            throw new SysInnerException(message);
-        }
+    public Map<String, Object> deleteMenus(@NotBlank(message = "{required}") @PathVariable String menuIds) throws SysInnerException {
+    	//实例化一个map；
+    	Map<String,Object> result = new HashMap<>();
+    	Map<String,Object> result2 = new HashMap<>();
+    	//获得全部的ids
+		String[] ids = menuIds.split(StringPool.COMMA);
+       try {
+		result2=this.menuService.deleteMeuns(ids);
+		result.put("result", result2);
+	   } catch (Exception e) {
+		// TODO 自动生成的 catch 块
+		e.printStackTrace();
+	   }
+    	return result;
     }
 
     @Log("修改菜单/按钮")
