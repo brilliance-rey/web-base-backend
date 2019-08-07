@@ -66,7 +66,7 @@ public class UserController extends BaseController {
     }
 
     @Log("新增用户")
-    @PostMapping("/add")
+    @PostMapping
 	@RequiresPermissions("user:add")
     public void addUser(@Valid @RequestBody User user) throws SysInnerException {
         try {

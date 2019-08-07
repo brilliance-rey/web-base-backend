@@ -51,7 +51,7 @@ public class MenuController extends BaseController {
     @Autowired
     protected MenuMapper menuMapper;
     
-    //得到登录用户的路由   徐胜浩  2019/7/23
+    //得到登录用户的路由（菜单栏的路径）   徐胜浩  2019/7/23
     @GetMapping("/{username}")
     public ArrayList<VueRouter<Menu>> getUserRouters(@NotBlank(message = "{required}") @PathVariable String username) {
         return this.userManager.getUserRouters(username);
@@ -59,7 +59,7 @@ public class MenuController extends BaseController {
     
     //获取菜单表中全部的菜单  xsh  2019/8/1    
     @GetMapping
-   // @RequiresPermissions("menu:view")
+     // @RequiresPermissions("menu:view")
     public Map<String, Object> menuList(Menu menu) {
         return this.menuService.findMenus(menu);
     }

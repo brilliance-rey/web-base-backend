@@ -71,8 +71,8 @@ public class RoleController extends BaseController {
         return result == null;
     }
     
-    //修改的时候默认的显示和全部菜单的显示  树形结构上的 xsh 2019/7/30
-    @GetMapping("roleMenu/{roleId}")
+    //修改的时候默认的显示和全部菜单的显示  树形结构上的  暂时不用 即menuid  xsh 2019/7/30
+    /*@GetMapping("roleMenu/{roleId}")
     public Map<String, Object> getRoleMenu(@NotBlank(message = "{required}") @PathVariable String roleId) {
     	Map<String, Object> result = new HashMap<>();
         //获取登录role全部关联的menu信息
@@ -91,9 +91,9 @@ public class RoleController extends BaseController {
         return  result;
         //return list.stream().map(roleMenu -> String.valueOf(roleMenu.getMenuId())).collect(Collectors.toList());
     }
-    
-    //生成菜单栏的个数   暂时不用 即menuid  xsh 2019/8/1
-    @GetMapping("menu/{roleId}")
+    */
+     //生成对应id下的全部menuID（修改的时候默认的个数）   xsh 2019/8/1
+    @GetMapping("/role-menu/{roleId}")
     public List<String> getRoleMenus(@NotBlank(message = "{required}") @PathVariable String roleId) {
         List<RoleMenu> list = this.roleMenuServie.getRoleMenusByRoleId(roleId);
         //list.stream().map方法 把数据转成string的类型 xsh 2019/8/1

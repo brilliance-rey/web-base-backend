@@ -80,7 +80,6 @@ public class LoginController {
     private ObjectMapper mapper;
 
     @ApiOperation(value="用户登陆", notes="根据用户名和密码 string类型")
-   // @ApiImplicitParam(name = "Authentication", value = "用户名/密码", required = true, dataType = "string")
     @PostMapping("/login")
     @Limit(key = "login", period = 60, count = 20, name = "登录接口", prefix = "limit")
     public SunkResponse login(
@@ -118,7 +117,13 @@ public class LoginController {
         String userId = this.saveTokenToRedis(user, jwtToken, request);
         user.setId(userId);
         
-        //向前端传递token 封装到Map中
+        //生成前端需要的信息 先保留 后期需要用了 再改回来。 合并的
+        //Map<String, Object> userInfo = this.generateUserInfo(jwtToken, user);
+        
+        
+        
+        //xsh  先保留 后期用了 再改回来。
+        //向前端传递token 封装到Map中   
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("token", jwtToken.getToken());
         userInfo.put("exipreTime", jwtToken.getExipreAt());
@@ -234,7 +239,41 @@ public class LoginController {
         return activeUser.getId();
     }
     
+    
     /**
+              * 生成前端需要的用户信息，包括：
+     * 1. token
+     * 2. Vue Router
+     * 3. 用户角色
+     * 4. 用户权限
+     * 5. 前端系统个性化配置信息
+     *
+     * @param token token
+     * @param user  用户信息
+     * @return UserInfo
+     */
+    /*private Map<String, Object> generateUserInfo(JWTToken token, User user) {
+        String username = user.getUsername();
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("token", token.getToken());
+        userInfo.put("exipreTime", token.getExipreAt());
+
+        Set<String> roles = this.userManager.getUserRoles(username);
+        userInfo.put("roles", roles);
+
+        Set<String> permissions = this.userManager.getUserPermissions(username);
+        userInfo.put("permissions", permissions);
+
+        UserConfig userConfig = this.userManager.getUserConfig(String.valueOf(user.getUserId()));
+        userInfo.put("config", userConfig);
+
+        user.setPassword("it's a secret");
+        userInfo.put("user", user);
+        return userInfo;
+    }*/
+
+
+     /**
      * 
      * xsh  2019/07/18 根据token 获取用户的信息
      */
