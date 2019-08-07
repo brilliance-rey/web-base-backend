@@ -57,7 +57,7 @@ public class RoleController extends BaseController {
     
     
     
-    // 获取角色的list    xsh 2019/7/23
+    // 获取角色的list 形成表格   xsh 2019/7/23
     @GetMapping
     @RequiresPermissions("role:view")
     public Map<String, Object> roleList(QueryRequest queryRequest, Role role) {
@@ -71,7 +71,7 @@ public class RoleController extends BaseController {
         return result == null;
     }
     
-    //修改的时候默认的显示和全部菜单的显示 xsh 2019/7/30
+    //修改的时候默认的显示和全部菜单的显示  树形结构上的 xsh 2019/7/30
     @GetMapping("roleMenu/{roleId}")
     public Map<String, Object> getRoleMenu(@NotBlank(message = "{required}") @PathVariable String roleId) {
     	Map<String, Object> result = new HashMap<>();
@@ -92,7 +92,7 @@ public class RoleController extends BaseController {
         //return list.stream().map(roleMenu -> String.valueOf(roleMenu.getMenuId())).collect(Collectors.toList());
     }
     
-    //生成菜单栏的个数  即menuid  xsh 2019/8/1
+    //生成菜单栏的个数   暂时不用 即menuid  xsh 2019/8/1
     @GetMapping("menu/{roleId}")
     public List<String> getRoleMenus(@NotBlank(message = "{required}") @PathVariable String roleId) {
         List<RoleMenu> list = this.roleMenuServie.getRoleMenusByRoleId(roleId);

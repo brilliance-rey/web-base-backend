@@ -100,23 +100,26 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     }
 
+    /**
+     * xsh 2019/8/7  角色的修改  
+     */
     @Override
     public void updateRole(Role role) throws Exception {
-        // 查找这些角色关联了那些用户
+        // 查找这些角色关联了那些用户 xsh 2019/8/7
         String[] roleId = {String.valueOf(role.getRoleId())};
         List<String> userIds = this.userRoleService.findUserIdsByRoleId(roleId);
-
         role.setModifyTime(new Date());
         baseMapper.updateById(role);
 
+        //删除之前的数据
         roleMenuMapper.delete(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getRoleId, role.getRoleId()));
-
         
         //xsh2019/7/31  用来获得修改的menuid数组
         String[] menuIds = role.getMenuId();
         //String[] menuIds = role.getMenuId().split(StringPool.COMMA);
+        //把数据重新存到数据库
         setRoleMenus(role, menuIds);
-        // 重新将这些用户的角色和权限缓存到 Redis中
+        // 重新将这些用户的角色和权限缓存到 Redis中  如果用户是空的就在做不了缓存 xsh 2019/8/7
         this.userManager.loadUserPermissionRoleRedisCache(userIds);
     }
 

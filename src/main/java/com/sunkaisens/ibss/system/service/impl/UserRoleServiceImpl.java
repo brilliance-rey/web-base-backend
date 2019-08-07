@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,11 +31,18 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 		Arrays.stream(userIds).forEach(id -> baseMapper.deleteByUserId(Long.valueOf(id)));
 	}
 
+	
+	/**
+	 * 查找关联的用户  xsh  2019/8/7
+	 */
 	@Override
 	public List<String> findUserIdsByRoleId(String[] roleIds) {
-
-		List<UserRole> list = baseMapper.selectList(new LambdaQueryWrapper<UserRole>().in(UserRole::getRoleId, (Object) roleIds));
-		return list.stream().map(userRole -> String.valueOf(userRole.getUserId())).collect(Collectors.toList());
+	   //遍历的到roleIds 之前没有遍历的到的roleIds
+      List<UserRole> list=new ArrayList<UserRole>();
+      for (String roleId : roleIds) {
+    	  list = baseMapper.selectList(new LambdaQueryWrapper<UserRole>().in(UserRole::getRoleId, (Object) roleId));
+	    }
+      return list.stream().map(userRole -> String.valueOf(userRole.getUserId())).collect(Collectors.toList());
 	}
 
 }

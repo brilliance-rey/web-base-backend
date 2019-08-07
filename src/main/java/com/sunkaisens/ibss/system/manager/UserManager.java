@@ -87,6 +87,7 @@ public class UserManager {
     public ArrayList<VueRouter<Menu>> getUserRouters(String username) {
         List<VueRouter<Menu>> routes = new ArrayList<>();
         List<Menu> menus = this.menuService.findUserMenus(username);
+        System.out.println("menu得个数"+menus);
         menus.forEach(menu -> {
             VueRouter<Menu> route = new VueRouter<>();
             route.setId(menu.getMenuId().toString());
@@ -135,7 +136,7 @@ public class UserManager {
      * @param userIds userIds
      */
     public void loadUserPermissionRoleRedisCache(List<String> userIds) throws Exception {
-        for (String userId : userIds) {
+    	for (String userId : userIds) {
             User user = userService.getById(userId);
             // 缓存用户角色
             cacheService.saveRoles(user.getUsername());
