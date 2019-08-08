@@ -275,7 +275,8 @@ public class LoginController {
      * 
      * xsh  2019/07/18 根据token 获取用户的信息
      */
-    @RequestMapping("login/user-info")
+    @ApiOperation(value="登录根据token 获取用户的信息")
+    @GetMapping("login/user-info")
     public SunkResponse generateUser(@NotBlank(message = "{required}") String username) {
     	Map<String, Object> userInfo = new HashMap<>();
     	System.out.println("進來了");
