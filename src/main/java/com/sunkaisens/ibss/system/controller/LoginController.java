@@ -117,16 +117,14 @@ public class LoginController {
         String userId = this.saveTokenToRedis(user, jwtToken, request);
         user.setId(userId);
         
-        //生成前端需要的信息 先保留 后期需要用了 再改回来。 合并的
-        Map<String, Object> userInfo = this.generateUserInfo(jwtToken, user);
+        // xsh 2019/8/8 生成前端需要的信息 先保留 后期需要用了 再改回来。 合并的
+        //Map<String, Object> userInfo = this.generateUserInfo(jwtToken, user);
         
-        
-        
-        //xsh  先保留 后期用了 再改回来。
+        //xsh 2019/8/8 先保留 后期用了 再改回来。
         //向前端传递token 封装到Map中   
-       /* Map<String, Object> userInfo = new HashMap<>();
+        Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("token", jwtToken.getToken());
-        userInfo.put("exipreTime", jwtToken.getExipreAt());*/
+        userInfo.put("exipreTime", jwtToken.getExipreAt());
         return new SunkResponse().message("认证成功").data(userInfo);
     }
 
@@ -241,7 +239,7 @@ public class LoginController {
     
     
     /**
-              * 生成前端需要的用户信息，包括：
+              * 生成前端需要的用户信息，包括： 先留下后期用了放开。
      * 1. token
      * 2. Vue Router
      * 3. 用户角色
@@ -252,7 +250,7 @@ public class LoginController {
      * @param user  用户信息
      * @return UserInfo
      */
-    private Map<String, Object> generateUserInfo(JWTToken token, User user) {
+    /*private Map<String, Object> generateUserInfo(JWTToken token, User user) {
         String username = user.getUsername();
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("token", token.getToken());
@@ -270,14 +268,14 @@ public class LoginController {
         user.setPassword("it's a secret");
         userInfo.put("user", user);
         return userInfo;
-    }
+    }*/
 
 
      /**
      * 
      * xsh  2019/07/18 根据token 获取用户的信息
      */
-   /* @RequestMapping("/user/info")
+    @RequestMapping("login/user-info")
     public SunkResponse generateUser(@NotBlank(message = "{required}") String username) {
     	Map<String, Object> userInfo = new HashMap<>();
     	System.out.println("進來了");
@@ -285,18 +283,18 @@ public class LoginController {
     		username = StringUtils.lowerCase(username);
     		System.out.println(username);
     		User user =this.userManager.getUser(username);
-    		*//**
+    		/**
     		 * 通过用户 ID获取前端系统个性化配置
-    		 *//*
+    		 */
     		UserConfig userConfig = this.userManager.getUserConfig(String.valueOf(user.getUserId()));
     		userInfo.put("config", userConfig);
     		
     		Set<String> roles =this.userManager.getUserRoles(username);
     		userInfo.put("roles", roles);
     		
-    		*//**
+    		/**
     		 * 通过用户名获取用户权限集合
-    		 *//*
+    		 */
     		Set<String> permissions = this.userManager.getUserPermissions(username);
     		userInfo.put("permissions", permissions);
     		user.setPassword("it's a secret");
@@ -304,5 +302,5 @@ public class LoginController {
     		System.out.println(userInfo);
     	}
     	  return new SunkResponse().data(userInfo);
-    }*/
+    }
 }
