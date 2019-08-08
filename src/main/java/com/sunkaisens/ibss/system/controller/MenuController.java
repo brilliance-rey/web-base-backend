@@ -59,59 +59,64 @@ public class MenuController extends BaseController {
     
     //获取菜单表中全部的菜单  xsh  2019/8/1    
     @GetMapping
-     // @RequiresPermissions("menu:view")
+     // @RequiresPermissions("menu:view") //解决菜单管理删除之后页面无显示的问题
     public Map<String, Object> menuList(Menu menu) {
         return this.menuService.findMenus(menu);
     }
-    
+    /**
+     * xsh 2019/8/8 菜单新增
+     * @param menu
+     * @throws Exception 
+     */
     @Log("新增菜单/按钮")
     @PostMapping
     @RequiresPermissions("menu:add")
-    public void addMenu(@Valid @RequestBody Menu menu) throws SysInnerException {
-        try {
-            this.menuService.createMenu(menu);
-        } catch (Exception e) {
-            message = "新增菜单/按钮失败";
-            log.error(message, e);
-            throw new SysInnerException(message);
-        }
+    public Map<String, Object> addMenu(@Valid @RequestBody Menu menu) throws Exception {
+    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String,Object> result = new HashMap<>();
+    	//定义一个map用于获取新增后的状态
+    	Map<String,Object> resultSate = new HashMap<>();
+    	resultSate=this.menuService.createMenu(menu);//新增完之后获取一个状态值
+    	result.put("result", resultSate); //封装map中把提示的状态值 返回到前台。。
+        return result ;
+    }
+
+   /**
+    * xsh 2019/8/8  菜单修改
+	* @param menuIds
+	* @throws Exception 
+	*/
+    @Log("修改菜单/按钮")
+    @PutMapping
+    @RequiresPermissions("menu:update")
+    public Map<String, Object> updateMenu(@Valid @RequestBody Menu menu) throws Exception {
+    	//定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String,Object> result = new HashMap<>();
+    	//定义一个map用于获取修改后的状态
+    	Map<String,Object> resultSate = new HashMap<>();//新增完之后获取一个状态值
+    	resultSate=this.menuService.updateMenu(menu);
+    	result.put("result", resultSate); //封装map中把提示的状态值 返回到前台。
+       return result;
     }
 
     /**
-              * 删除的修改     xsh  2019/8/6
+     * xsh  2019/8/6菜单删除  
      * @param menuIds
-     * @throws SysInnerException
+     * @throws Exception 
      */
     @Log("删除菜单/按钮")
     @DeleteMapping("/{menuIds}")
     @RequiresPermissions("menu:delete")
-    public Map<String, Object> deleteMenus(@NotBlank(message = "{required}") @PathVariable String menuIds) throws SysInnerException {
-    	//实例化一个map；
+    public Map<String, Object> deleteMenus(@NotBlank(message = "{required}") @PathVariable String menuIds) throws Exception {
+    	//定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String,Object> result = new HashMap<>();
-    	Map<String,Object> result2 = new HashMap<>();
+    	//定义一个map用于获取删除后的状态
+    	Map<String,Object> resultSate = new HashMap<>();
     	//获得全部的ids
 		String[] ids = menuIds.split(StringPool.COMMA);
-       try {
-		result2=this.menuService.deleteMeuns(ids);
-		result.put("result", result2);
-	   } catch (Exception e) {
-		// TODO 自动生成的 catch 块
-		e.printStackTrace();
-	   }
+		resultSate=this.menuService.deleteMeuns(ids);
+		result.put("result", resultSate);
     	return result;
-    }
-
-    @Log("修改菜单/按钮")
-    @PutMapping
-    @RequiresPermissions("menu:update")
-    public void updateMenu(@Valid @RequestBody Menu menu) throws SysInnerException {
-        try {
-            this.menuService.updateMenu(menu);
-        } catch (Exception e) {
-            message = "修改菜单/按钮失败";
-            log.error(message, e);
-            throw new SysInnerException(message);
-        }
     }
 
     @PostMapping("excel")

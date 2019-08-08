@@ -82,32 +82,68 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         queryWrapper.orderByAsc(Menu::getMenuId);
         return this.baseMapper.selectList(queryWrapper);
     }
-
-    @Override
-    @Transactional
-    public void createMenu(Menu menu) {
-        menu.setCreateTime(new Date());
-        setMenu(menu);
-        this.save(menu);
-    }
-
-    @Override
-    @Transactional
-    public void updateMenu(Menu menu) throws Exception {
-        menu.setModifyTime(new Date());
-        setMenu(menu);
-        baseMapper.updateById(menu);
-
-        // 查找与这些菜单/按钮关联的用户
-        List<String> userIds = this.baseMapper.findUserIdsByMenuId(String.valueOf(menu.getMenuId()));
-        // 重新将这些用户的角色和权限缓存到 Redis中
-        this.userManager.loadUserPermissionRoleRedisCache(userIds);
-    }
-
     
     /**
+     * xsh 2019/8/8 新增一个菜单
+     * @throws SysInnerException 
+     */
+    @Override
+    @Transactional
+    public Map<String, Object> createMenu(Menu menu) throws Exception {
+	    HashMap<String, Object> result = new HashMap<>();
+        menu.setCreateTime(new Date());
+        setMenu(menu);
+        try {
+			boolean boolen=this.save(menu);
+			if (boolen==true) {
+        		result.put("state", 1);
+    			result.put("message", "添加成功");
+			}else {
+				result.put("state", 0);
+				result.put("message", "添加失败");
+			}
+		} catch (Exception e) {
+			// TODO 自动生成的 catch 块
+			result.put("state", 0);
+    		result.put("message","添加失败" );
+			message = "添加菜单/按钮失败";
+	        log.error(message, e);
+	        throw new SysInnerException(message);
+			}
+        return result;
+    }
+
+    /**
+     * xsh  2019/8/8 修改一个菜单
+     */
+    @Override
+    @Transactional
+    public Map<String, Object> updateMenu(Menu menu) throws Exception {
+        HashMap<String, Object> result = new HashMap<>();
+        menu.setModifyTime(new Date());
+        setMenu(menu);
+		try {
+			int num =baseMapper.updateById(menu);
+			if (num==1) {
+				// 查找与这些菜单/按钮关联的用户
+				List<String> userIds = this.baseMapper.findUserIdsByMenuId(String.valueOf(menu.getMenuId()));
+				// 重新将这些用户的角色和权限缓存到 Redis中
+				this.userManager.loadUserPermissionRoleRedisCache(userIds);
+				result.put("state",1);
+				result.put("message","编辑成功" );
+			}
+		} catch (Exception e) {
+			result.put("state",0);
+			result.put("message","编辑失败" );
+			message = "编辑菜单/按钮失败";
+            log.error(message, e);
+            throw new SysInnerException(message);
+		}
+        return result;
+    }
+    /**
      * 
-     * xsh 2019/8/6 删除的修改
+     * xsh 2019/8/6 删除
      */
     @Override
     @Transactional
@@ -121,30 +157,32 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     	  parentId=menu.getParentId();
     	  //先判断是不是父级菜单 如果不是可删除
     	  if (parentId==0) {
-    		  result.put("flase", "0");
-    		  result.put("state","父级菜单不可删除" );
+    		  result.put("state", 0);
+    		  result.put("message","父级菜单不可删除" );
     	  }else {
-    		 //查找与这些菜单/按钮关联的用户
+    		  // 删除这些菜单/按钮
             try {
-				List<String> userIds = this.baseMapper.findUserIdsByMenuId(String.valueOf(menuId));
-				// 删除这些菜单/按钮
-				this.baseMapper.deleteMenus(menuId);
-				// 重新将这些用户的角色和权限缓存到 Redis中
-				this.userManager.loadUserPermissionRoleRedisCache(userIds);
-				result.put("success", "1");
-	    		result.put("state","删除成功" );
+            	int num=  this.baseMapper.deleteMenus(menuId);
+            	if (num==1) {
+            		//查找与这些菜单/按钮关联的用户
+            		List<String> userIds = this.baseMapper.findUserIdsByMenuId(String.valueOf(menuId));
+            		// 重新将这些用户的角色和权限缓存到 Redis中
+            		this.userManager.loadUserPermissionRoleRedisCache(userIds);
+            		result.put("state", 1);
+            		result.put("message","删除成功" );
+				}
 			} catch (Exception e) {
 				// TODO 自动生成的 catch 块
-				result.put("flase", "0");
-	    		result.put("state","删除菜单/按钮失败" );
-				  message = "新增菜单/按钮失败";
-		          log.error(message, e);
-		          throw new SysInnerException(message);
+				result.put("state", 0);
+	    		result.put("message","删除失败" );
+			    message = "删除菜单/按钮失败";
+	            log.error(message, e);
+	            throw new SysInnerException(message);
 			}
             
     	  }
     	  
-      }
+       }
         return result;
     }
 

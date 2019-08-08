@@ -100,46 +100,86 @@ public class RoleController extends BaseController {
         return list.stream().map(roleMenu -> String.valueOf(roleMenu.getMenuId())).collect(Collectors.toList());
     }
 
+    /**
+     * xsh 2019/8/8 角色新增的修改 添加一个返回值
+     * @param user
+     * @return
+     * @throws SysInnerException
+     */
     @Log("新增角色")
     @PostMapping
-    //@RequiresPermissions("role:add")
-    public void addRole(@Valid @RequestBody Role role) throws SysInnerException {
-        try {
+    @RequiresPermissions("role:add")
+    public Map<String, Object> addRole(@Valid @RequestBody Role role) throws SysInnerException {
+    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String, Object> result = new HashMap<>();
+    	try {
             this.roleService.createRole(role);
+            result.put("state", 1);
+            result.put("message", "添加成功");
         } catch (Exception e) {
             message = "新增角色失败";
             log.error(message, e);
+            result.put("state", 0);
+            result.put("message", "添加失败");
             throw new SysInnerException(message);
         }
+    	return	result;
     }
 
-    @Log("删除角色")
-    @DeleteMapping("/{roleIds}")
-    @RequiresPermissions("role:delete")
-    public void deleteRoles(@NotBlank(message = "{required}") @PathVariable String roleIds) throws SysInnerException {
-        try {
-            String[] ids = roleIds.split(StringPool.COMMA);
-            this.roleService.deleteRoles(ids);
-        } catch (Exception e) {
-            message = "删除角色失败";
-            log.error(message, e);
-            throw new SysInnerException(message);
-        }
-    }
-
+    /**
+     * xsh 2019/8/8 角色修改的修改 添加一个返回值
+     * @param user
+     * @return
+     * @throws SysInnerException
+     */
     @Log("修改角色")
     @PutMapping
     @RequiresPermissions("role:update")
-    public void updateRole(@Valid @RequestBody Role role) throws SysInnerException {
-        try {
+    public Map<String, Object> updateRole(@Valid @RequestBody Role role) throws SysInnerException {
+    	//定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String, Object> result = new HashMap<>();
+    	try {
             this.roleService.updateRole(role);
+            result.put("state", 1);
+            result.put("message", "修改成功");
         } catch (Exception e) {
             message = "修改角色失败";
             log.error(message, e);
+            result.put("state", 0);
+            result.put("message", "修改失败");
             throw new SysInnerException(message);
         }
+    	return result;
     }
 
+    /**
+     * xsh 2019/8/8 角色删除的修改 添加一个返回值
+     * @param user
+     * @return
+     * @throws SysInnerException
+     */
+    @Log("删除角色")
+    @DeleteMapping("/{roleIds}")
+    @RequiresPermissions("role:delete")
+    public Map<String, Object> deleteRoles(@NotBlank(message = "{required}") @PathVariable String roleIds) throws SysInnerException {
+    	//定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String, Object> result = new HashMap<>();
+    	try {
+            String[] ids = roleIds.split(StringPool.COMMA);
+            this.roleService.deleteRoles(ids);
+            result.put("state", 1);
+            result.put("message", "删除成功");
+        } catch (Exception e) {
+            message = "删除角色失败";
+            log.error(message, e);
+            result.put("state", 0);
+            result.put("message", "删除失败");
+            throw new SysInnerException(message);
+        }
+    return	result;
+    }
+
+    
     @PostMapping("excel")
     @RequiresPermissions("role:export")
     public void export(QueryRequest queryRequest, Role role, HttpServletResponse response) throws SysInnerException {

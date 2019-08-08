@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,19 +37,32 @@ public class LogController extends BaseController {
     public Map<String, Object> logList(QueryRequest request, SysLog sysLog) {
         return getDataTable(logService.findLogs(request, sysLog));
     }
-
+   
+    /**
+     * xsh 2019/8/8 日志删除的修改 添加一个返回值
+     * @param user
+     * @return
+     * @throws SysInnerException
+     */
     @Log("删除系统日志")
     @DeleteMapping("/{ids}")
     @RequiresPermissions("log:delete")
-    public void deleteLogss(@NotBlank(message = "{required}") @PathVariable String ids) throws SysInnerException {
-        try {
+    public Map<String, Object> deleteLogss(@NotBlank(message = "{required}") @PathVariable String ids) throws SysInnerException {
+    	//定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String, Object> result = new HashMap<>();
+    	try {
             String[] logIds = ids.split(StringPool.COMMA);
             this.logService.deleteLogs(logIds);
+            result.put("state", 1);
+            result.put("message", "删除成功");
         } catch (Exception e) {
             message = "删除日志失败";
             log.error(message, e);
+            result.put("state", 0);
+            result.put("message", "删除失败");
             throw new SysInnerException(message);
         }
+    	return result;
     }
 
     @PostMapping("excel")

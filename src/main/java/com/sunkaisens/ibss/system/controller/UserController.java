@@ -1,5 +1,6 @@
 package com.sunkaisens.ibss.system.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,44 +66,82 @@ public class UserController extends BaseController {
         return getDataTable(userService.findUserDetail(user, queryRequest));
     }
 
+    /**
+     * xsh 2019/8/8 用户添加的修改 添加一个返回值
+     * @param user
+     * @return
+     * @throws SysInnerException
+     */
     @Log("新增用户")
     @PostMapping
 	@RequiresPermissions("user:add")
-    public void addUser(@Valid @RequestBody User user) throws SysInnerException {
-        try {
+    public Map<String, Object> addUser(@Valid @RequestBody User user) throws SysInnerException {
+    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String, Object> result = new HashMap<>();
+    	try {
             this.userService.createUser(user);
+            result.put("state", 1);
+            result.put("message", "添加成功");
         } catch (Exception e) {
             message = "新增用户失败";
             log.error(message, e);
+            result.put("state", 0);
+            result.put("message", "添加失败");
             throw new SysInnerException(message);
         }
+    	return result;
     }  
 
+    /**
+     * xsh 2019/8/8 用户修改的修改 添加一个返回值
+     * @param user
+     * @return
+     * @throws SysInnerException
+     */
     @Log("修改用户")
     @PutMapping
     @RequiresPermissions("user:update")
-    public void updateUser(@Valid @RequestBody User user) throws SysInnerException {
-        try {
+    public Map<String, Object> updateUser(@Valid @RequestBody User user) throws SysInnerException {
+    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String, Object> result = new HashMap<>();
+    	try {
             this.userService.updateUser(user);
+            result.put("state", 1);
+            result.put("message", "修改成功");
         } catch (Exception e) {
             message = "修改用户失败";
             log.error(message, e);
+            result.put("state", 0);
+            result.put("message", "修改失败");
             throw new SysInnerException(message);
         }
+    	return result;
     }
-
+    /**
+     * xsh 2019/8/8 用户删除的修改 添加一个返回值
+     * @param user
+     * @return
+     * @throws SysInnerException
+     */
     @Log("删除用户")
     @DeleteMapping("/{userIds}")
 	@RequiresPermissions("user:delete")
-    public void deleteUsers(@NotBlank(message = "{required}") @PathVariable String userIds) throws SysInnerException {
-        try {
+    public Map<String, Object> deleteUsers(@NotBlank(message = "{required}") @PathVariable String userIds) throws SysInnerException {
+    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String, Object> result = new HashMap<>();
+    	try {
             String[] ids = userIds.split(StringPool.COMMA);
             this.userService.deleteUsers(ids);
+            result.put("state", 1);
+            result.put("message", "删除成功");
         } catch (Exception e) {
             message = "删除用户失败";
             log.error(message, e);
+            result.put("state", 0);
+            result.put("message", "删除失败");
             throw new SysInnerException(message);
         }
+    	return result;
     }
 
     @PutMapping("profile")

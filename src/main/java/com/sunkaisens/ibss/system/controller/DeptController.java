@@ -59,22 +59,33 @@ public class DeptController extends BaseController {
         return this.deptService.findDepts(request, dept);
     }
 
+    /**
+	 *  xsh 2019/8/2 新增部门的修改  添加一个返回值
+	 * @param dept
+	 * @throws SysInnerException
+	 */
     @Log("新增部门")
     @PostMapping
     @RequiresPermissions("dept:add")
-    public void addDept(@Valid @RequestBody Dept dept) throws SysInnerException {
-        try {
-        	System.out.println();
+    public Map<String, Object> addDept(@Valid @RequestBody Dept dept) throws SysInnerException {
+    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String, Object> result = new HashMap<>();
+    	try {
             this.deptService.createDept(dept);
+            result.put("state", 1);
+            result.put("message", "添加成功");
         } catch (Exception e) {
             message = "新增部门失败";
             log.error(message, e);
+            result.put("state", 0);
+            result.put("message", "添加失败");
             throw new SysInnerException(message);
         }
+    	return result;
     }
     
 	/**
-	 *  xsh 2019/8/2
+	 *  xsh 2019/8/2 删除部门的调整
 	 * @param dept
 	 * @throws SysInnerException
 	 */
@@ -110,7 +121,7 @@ public class DeptController extends BaseController {
     				 message = "删除部门失败";
     				 log.error(message, e); 
     				 result.put("state", 0);
-    				 result.put("message", "删除部门失败");
+    				 result.put("message", "删除失败");
     				 throw new SysInnerException(message);
     			 }
     		 }
@@ -121,17 +132,29 @@ public class DeptController extends BaseController {
     	return result;
     }
     
+    /**
+	 *  xsh 2019/8/2修改部门的修改
+	 * @param dept
+	 * @throws SysInnerException
+	 */
     @Log("修改部门")
     @PutMapping
     @RequiresPermissions("dept:update")
-    public void updateDept(@Valid @RequestBody Dept dept) throws SysInnerException {
-        try {
+    public Map<String, Object> updateDept(@Valid @RequestBody Dept dept) throws SysInnerException {
+    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
+    	Map<String, Object> result = new HashMap<>();
+    	try {
             this.deptService.updateDept(dept);
+            result.put("state", 1);
+            result.put("message", "修改成功");
         } catch (Exception e) {
             message = "修改部门失败";
             log.error(message, e);
+            result.put("state", 0);
+            result.put("message", "修改失败");
             throw new SysInnerException(message);
         }
+    	return result;
     }
 
     @PostMapping("excel")

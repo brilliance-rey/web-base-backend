@@ -15,10 +15,20 @@ public interface MenuService extends IService<Menu> {
     Map<String, Object> findMenus(Menu menu);
 
     List<Menu> findMenuList(Menu menu);
+    
+    /**
+     * xsh  2019/8/8 新增一个菜单
+     * @param menu
+     * @return
+     */
+    Map<String, Object> createMenu(Menu menu)throws Exception;
+    /**
+     * xsh 2019/8/8 菜单的修改
+     * @param menu
+     * @throws Exception
+     */
 
-    void createMenu(Menu menu);
-
-    void updateMenu(Menu menu) throws Exception;
+    Map<String, Object> updateMenu(Menu menu) throws Exception;
 
     /**
              * 删除菜单/按钮
