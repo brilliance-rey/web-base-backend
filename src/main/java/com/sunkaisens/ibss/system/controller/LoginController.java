@@ -84,20 +84,34 @@ public class LoginController {
             @NotBlank(message = "{required}")@RequestParam String password, HttpServletRequest request) throws Exception {
     	username = StringUtils.lowerCase(username);
         password = MD5Util.encrypt(username, password);
-        final String errorMessage = "用户名或密码错误";
+       // final String errorMessage = "用户名或密码错误";
          //根据用户名查用户信息
          User user = this.userManager.getUser(username);
+         //用于登录的时候加一个状态值和一个提示
+         Map<String, Object> result = new HashMap<>();
+         
+         
+         
+        if (user == null) {
+        	// throw new SysInnerException(errorMessage);
+        	result.put("state", 0);
+        	result.put("message", "用户名或密码错误");
+        	return new SunkResponse().data(result);
+           }
+        if (!StringUtils.equals(user.getPassword(), password)) {
+        	//throw new SysInnerException(errorMessage);
+        	result.put("state", 0);
+        	result.put("message", "用户名或密码错误");
+        	return new SunkResponse().data(result);
+        } 
+        if (User.STATUS_LOCK.equals(user.getStatus())) {
+        	//throw new SysInnerException("账号已被锁定,请联系管理员！");
+        	result.put("state", 0);
+        	result.put("message", "账号已被锁定,请联系管理员！");
+        	return new SunkResponse().data(result);
+        }
 
-        if (user == null) 
-           // throw new SysInnerException(errorMessage);
-            return new SunkResponse().message(errorMessage);
-        if (!StringUtils.equals(user.getPassword(), password)) 
-            //throw new SysInnerException(errorMessage);
-            return new SunkResponse().message(errorMessage);
-        if (User.STATUS_LOCK.equals(user.getStatus())) 
-            //throw new SysInnerException("账号已被锁定,请联系管理员！");
-            return new SunkResponse().message("账号已被锁定,请联系管理员！");
-
+        
         // 更新用户登录时间
         this.userService.updateLoginTime(username);
         // 保存登录记录
@@ -124,7 +138,10 @@ public class LoginController {
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("token", jwtToken.getToken());
         userInfo.put("exipreTime", jwtToken.getExipreAt());
-        return new SunkResponse().message("登录成功").data(userInfo);
+        userInfo.put("state", 1);
+        userInfo.put("message", "登录成功");
+        //return new SunkResponse().message("认证成功").data(userInfo);
+        return new SunkResponse().data(userInfo);
     }
 
     
