@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,15 +49,13 @@ import com.sunkaisens.ibss.system.service.LoginLogService;
 import com.sunkaisens.ibss.system.service.UserService;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import net.sf.saxon.functions.ConstantFunction.False;
 
 
 @Validated
 @RestController
 @Configuration
-@Api(description="登陆的实现")
+@Api(tags="登陆实现") //swagger的描述
 public class LoginController {
 	
     @Value("${ibss.ip2region.enabled}")
@@ -79,10 +76,10 @@ public class LoginController {
     @Autowired
     private ObjectMapper mapper;
 
-    @ApiOperation(value="用户登陆", notes="根据用户名和密码 string类型")
+    @ApiOperation(value="用户登录获取token", notes="用户名/密码          string类型")
     @PostMapping("/login")
     @Limit(key = "login", period = 60, count = 20, name = "登录接口", prefix = "limit")
-    public SunkResponse login(
+    public SunkResponse login  (
             @NotBlank(message = "{required}")@RequestParam String username,
             @NotBlank(message = "{required}")@RequestParam String password, HttpServletRequest request) throws Exception {
     	username = StringUtils.lowerCase(username);
@@ -92,12 +89,14 @@ public class LoginController {
          User user = this.userManager.getUser(username);
 
         if (user == null) 
-            throw new SysInnerException(errorMessage);
+           // throw new SysInnerException(errorMessage);
+            return new SunkResponse().message("认证失败").data(errorMessage);
         if (!StringUtils.equals(user.getPassword(), password)) 
-            throw new SysInnerException(errorMessage);
+            //throw new SysInnerException(errorMessage);
+            return new SunkResponse().message("认证失败").data(errorMessage);
         if (User.STATUS_LOCK.equals(user.getStatus())) 
-            throw new SysInnerException("账号已被锁定,请联系管理员！");
-            
+            //throw new SysInnerException("账号已被锁定,请联系管理员！");
+            return new SunkResponse().message("认证失败").data("账号已被锁定,请联系管理员！");
 
         // 更新用户登录时间
         this.userService.updateLoginTime(username);
@@ -131,6 +130,7 @@ public class LoginController {
     
     //生成登录的日志文件   xsh 2019/8/1
     @GetMapping("index/{username}")
+    @ApiOperation(value="用于生成登录日志")
     public SunkResponse index(@NotBlank(message = "{required}") @PathVariable String username) {
         Map<String, Object> data = new HashMap<>();
         // 获取系统访问记录
@@ -152,6 +152,7 @@ public class LoginController {
 
     @RequiresPermissions("user:online")
     @GetMapping("online")
+    @ApiOperation(value="获取在线人数")
     public SunkResponse userOnline(String username) throws Exception {
         String now = DateUtil.formatFullTime(LocalDateTime.now());
         Set<String> userOnlineStringSet = redisService.zrangeByScore(IBSSConstant.ACTIVE_USERS_ZSET_PREFIX, now, "+inf");
@@ -201,6 +202,7 @@ public class LoginController {
     
     //退出登录     xsh 2019/8/1
     @GetMapping("logout/{id}")
+    @ApiOperation(value="用户退出登录的请求", notes="用户ID   string类型")
     public void logout(@NotBlank(message = "{required}") @PathVariable String id) throws Exception {
     	System.out.println(id);
         this.kickout(id);
@@ -208,6 +210,7 @@ public class LoginController {
   
     //注册用户
     @PostMapping("regist")
+    @ApiOperation(value="注册的请求", notes="用户ID   string类型")
     public void regist(
             @NotBlank(message = "{required}") String username,
             @NotBlank(message = "{required}") String password) throws Exception {
@@ -275,8 +278,8 @@ public class LoginController {
      * 
      * xsh  2019/07/18 根据token 获取用户的信息
      */
-    @ApiOperation(value="登录根据token 获取用户的信息")
     @GetMapping("login/user-info")
+    @ApiOperation(value="登录根据token 获取用户的信息", notes="")
     public SunkResponse generateUser(@NotBlank(message = "{required}") String username) {
     	Map<String, Object> userInfo = new HashMap<>();
     	System.out.println("進來了");
