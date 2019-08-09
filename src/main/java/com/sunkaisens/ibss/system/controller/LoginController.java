@@ -90,13 +90,13 @@ public class LoginController {
 
         if (user == null) 
            // throw new SysInnerException(errorMessage);
-            return new SunkResponse().message("认证失败").data(errorMessage);
+            return new SunkResponse().message(errorMessage);
         if (!StringUtils.equals(user.getPassword(), password)) 
             //throw new SysInnerException(errorMessage);
-            return new SunkResponse().message("认证失败").data(errorMessage);
+            return new SunkResponse().message(errorMessage);
         if (User.STATUS_LOCK.equals(user.getStatus())) 
             //throw new SysInnerException("账号已被锁定,请联系管理员！");
-            return new SunkResponse().message("认证失败").data("账号已被锁定,请联系管理员！");
+            return new SunkResponse().message("账号已被锁定,请联系管理员！");
 
         // 更新用户登录时间
         this.userService.updateLoginTime(username);
@@ -124,7 +124,7 @@ public class LoginController {
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("token", jwtToken.getToken());
         userInfo.put("exipreTime", jwtToken.getExipreAt());
-        return new SunkResponse().message("认证成功").data(userInfo);
+        return new SunkResponse().message("登录成功").data(userInfo);
     }
 
     

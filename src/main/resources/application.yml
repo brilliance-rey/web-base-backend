@@ -82,7 +82,6 @@ febs:
     anonUrl: /login,/logout/**,/regist,/user/check/**
     # token有效期，单位秒
     jwtTimeOut: 3600
-
 ibss:
   ip2region:
     enabled: false
@@ -91,5 +90,7 @@ ibss:
     batch:
       insert:
         num: 1000
+swagger:
+  enable: true
  
         
