@@ -37,13 +37,16 @@ import com.sunkaisens.ibss.system.service.RoleMenuServie;
 import com.sunkaisens.ibss.system.service.RoleService;
 import com.wuwenze.poi.ExcelKit;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Validated
 @RestController
 @RequestMapping("role")
+@Api(tags="角色管理")
 public class RoleController extends BaseController {
      
     @Autowired
@@ -60,6 +63,7 @@ public class RoleController extends BaseController {
     // 获取角色的list 形成表格   xsh 2019/7/23
     @GetMapping
     @RequiresPermissions("role:view")
+    @ApiOperation(value="获得全部的角色信息和单个信息")
     public Map<String, Object> roleList(QueryRequest queryRequest, Role role) {
         return getDataTable(roleService.findRoles(role, queryRequest));
     }
@@ -94,6 +98,7 @@ public class RoleController extends BaseController {
     */
      //生成对应id下的全部menuID（修改的时候默认的个数）   xsh 2019/8/1
     @GetMapping("/role-menu/{roleId}")
+    @ApiOperation(value="获得单个角色下的全部的id",notes="传入roleId")
     public List<String> getRoleMenus(@NotBlank(message = "{required}") @PathVariable String roleId) {
         List<RoleMenu> list = this.roleMenuServie.getRoleMenusByRoleId(roleId);
         //list.stream().map方法 把数据转成string的类型 xsh 2019/8/1
@@ -109,6 +114,7 @@ public class RoleController extends BaseController {
     @Log("新增角色")
     @PostMapping
     @RequiresPermissions("role:add")
+    @ApiOperation(value="新增角色",notes="传入Role实体类")
     public Map<String, Object> addRole(@Valid @RequestBody Role role) throws SysInnerException {
     	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String, Object> result = new HashMap<>();
@@ -135,6 +141,7 @@ public class RoleController extends BaseController {
     @Log("修改角色")
     @PutMapping
     @RequiresPermissions("role:update")
+    @ApiOperation(value="修改角色",notes="传入Role实体类")
     public Map<String, Object> updateRole(@Valid @RequestBody Role role) throws SysInnerException {
     	//定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String, Object> result = new HashMap<>();
@@ -161,6 +168,7 @@ public class RoleController extends BaseController {
     @Log("删除角色")
     @DeleteMapping("/{roleIds}")
     @RequiresPermissions("role:delete")
+    @ApiOperation(value="删除角色",notes="传入roleId")
     public Map<String, Object> deleteRoles(@NotBlank(message = "{required}") @PathVariable String roleIds) throws SysInnerException {
     	//定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String, Object> result = new HashMap<>();
@@ -182,6 +190,7 @@ public class RoleController extends BaseController {
     
     @PostMapping("excel")
     @RequiresPermissions("role:export")
+    @ApiOperation(value="导出角色")
     public void export(QueryRequest queryRequest, Role role, HttpServletResponse response) throws SysInnerException {
         try {
             List<Role> roles = this.roleService.findRoles(role, queryRequest).getRecords();

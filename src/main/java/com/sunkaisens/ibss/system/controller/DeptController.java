@@ -35,6 +35,8 @@ import com.sunkaisens.ibss.system.domain.User;
 import com.sunkaisens.ibss.system.service.DeptService;
 import com.wuwenze.poi.ExcelKit;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import springfox.documentation.swagger.web.SwaggerApiListingReader;
 
@@ -42,6 +44,7 @@ import springfox.documentation.swagger.web.SwaggerApiListingReader;
 @Validated
 @RestController
 @RequestMapping("dept")
+@Api(tags="部门管理的实现")
 public class DeptController extends BaseController {
 
     private String message;
@@ -55,6 +58,7 @@ public class DeptController extends BaseController {
 	private DeptMapper deptMapper;
     
     @GetMapping
+    @ApiOperation(value="分页获得全部的部门信息和条件的获取部门信息")
     public Map<String, Object> deptList(QueryRequest request, Dept dept) {
         return this.deptService.findDepts(request, dept);
     }
@@ -67,6 +71,7 @@ public class DeptController extends BaseController {
     @Log("新增部门")
     @PostMapping
     @RequiresPermissions("dept:add")
+    @ApiOperation(value="部门添加", notes="dept 部门实体类")
     public Map<String, Object> addDept(@Valid @RequestBody Dept dept) throws SysInnerException {
     	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String, Object> result = new HashMap<>();
@@ -92,6 +97,7 @@ public class DeptController extends BaseController {
     @Log("删除部门")
     @DeleteMapping("deletNew/{deptIds}")
     @RequiresPermissions("dept:delete")
+    @ApiOperation(value="部门删除", notes="deptId 部门ID")
     public Map<String, Object> deleteDeptsNew(@NotBlank(message = "{required}") @PathVariable String deptIds) throws SysInnerException {
     	 Map<String,Object> result = new HashMap<>();
     	 Dept dept = new Dept(); //实例化一个部门
@@ -140,6 +146,7 @@ public class DeptController extends BaseController {
     @Log("修改部门")
     @PutMapping
     @RequiresPermissions("dept:update")
+    @ApiOperation(value="部门修改", notes="dept 部门实体")
     public Map<String, Object> updateDept(@Valid @RequestBody Dept dept) throws SysInnerException {
     	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String, Object> result = new HashMap<>();
@@ -159,6 +166,7 @@ public class DeptController extends BaseController {
 
     @PostMapping("excel")
     @RequiresPermissions("dept:export")
+    @ApiOperation(value="部门导出")
     public void export(Dept dept, QueryRequest request, HttpServletResponse response) throws SysInnerException {
         try {
             List<Dept> depts = this.deptService.findDepts(dept, request);

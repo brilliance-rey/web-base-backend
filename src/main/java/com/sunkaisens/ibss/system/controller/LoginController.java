@@ -76,9 +76,9 @@ public class LoginController {
     @Autowired
     private ObjectMapper mapper;
 
-    @ApiOperation(value="用户登录获取token", notes="用户名/密码          string类型")
     @PostMapping("/login")
     @Limit(key = "login", period = 60, count = 20, name = "登录接口", prefix = "limit")
+    @ApiOperation(value="用户登录获取token", notes="用户名/密码          string类型")
     public SunkResponse login  (
             @NotBlank(message = "{required}")@RequestParam String username,
             @NotBlank(message = "{required}")@RequestParam String password, HttpServletRequest request) throws Exception {
@@ -172,6 +172,7 @@ public class LoginController {
 
     @DeleteMapping("kickout/{id}")
     @RequiresPermissions("user:kickout")
+    @ApiOperation(value="退出登录包含的方法删除登录信息", notes="用户ID   string类型")
     public void kickout(@NotBlank(message = "{required}") @PathVariable String id) throws Exception {
     	//获取最新的时间
         String now = DateUtil.formatFullTime(LocalDateTime.now());
@@ -210,7 +211,7 @@ public class LoginController {
   
     //注册用户
     @PostMapping("regist")
-    @ApiOperation(value="注册的请求", notes="用户ID   string类型")
+    @ApiOperation(value="注册的请求", notes="用户名/密码   string类型")
     public void regist(
             @NotBlank(message = "{required}") String username,
             @NotBlank(message = "{required}") String password) throws Exception {
@@ -279,7 +280,7 @@ public class LoginController {
      * xsh  2019/07/18 根据token 获取用户的信息
      */
     @GetMapping("login/user-info")
-    @ApiOperation(value="登录根据token 获取用户的信息", notes="")
+    @ApiOperation(value="登录获取用户的信息", notes="登录根据token登录获取用户的信息 ")
     public SunkResponse generateUser(@NotBlank(message = "{required}") String username) {
     	Map<String, Object> userInfo = new HashMap<>();
     	System.out.println("進來了");

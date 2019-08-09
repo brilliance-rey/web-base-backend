@@ -32,6 +32,8 @@ import com.sunkaisens.ibss.system.manager.UserManager;
 import com.sunkaisens.ibss.system.service.MenuService;
 import com.wuwenze.poi.ExcelKit;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.saxon.expr.Component.M;
 
@@ -39,6 +41,7 @@ import net.sf.saxon.expr.Component.M;
 @Validated
 @RestController
 @RequestMapping("/menu")
+@Api(tags="菜单管理的实现")
 public class MenuController extends BaseController {
 
     private String message;
@@ -53,12 +56,14 @@ public class MenuController extends BaseController {
     
     //得到登录用户的路由（菜单栏的路径）   徐胜浩  2019/7/23
     @GetMapping("/{username}")
+    @ApiOperation(value="获得登录用户的路由", notes="username   string类型")
     public ArrayList<VueRouter<Menu>> getUserRouters(@NotBlank(message = "{required}") @PathVariable String username) {
         return this.userManager.getUserRouters(username);
     }
     
     //获取菜单表中全部的菜单  xsh  2019/8/1    
     @GetMapping
+    @ApiOperation(value="获得全部的菜单信息", notes="menu 菜单实体类")
      // @RequiresPermissions("menu:view") //解决菜单管理删除之后页面无显示的问题
     public Map<String, Object> menuList(Menu menu) {
         return this.menuService.findMenus(menu);
@@ -71,6 +76,7 @@ public class MenuController extends BaseController {
     @Log("新增菜单/按钮")
     @PostMapping
     @RequiresPermissions("menu:add")
+    @ApiOperation(value="菜单添加", notes="menu 菜单实体类")
     public Map<String, Object> addMenu(@Valid @RequestBody Menu menu) throws Exception {
     	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String,Object> result = new HashMap<>();
@@ -89,6 +95,7 @@ public class MenuController extends BaseController {
     @Log("修改菜单/按钮")
     @PutMapping
     @RequiresPermissions("menu:update")
+    @ApiOperation(value="菜单的修改", notes="menu 菜单实体类")
     public Map<String, Object> updateMenu(@Valid @RequestBody Menu menu) throws Exception {
     	//定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String,Object> result = new HashMap<>();
@@ -107,6 +114,7 @@ public class MenuController extends BaseController {
     @Log("删除菜单/按钮")
     @DeleteMapping("/{menuIds}")
     @RequiresPermissions("menu:delete")
+    @ApiOperation(value="菜单的删除", notes="menuIds  string类型")
     public Map<String, Object> deleteMenus(@NotBlank(message = "{required}") @PathVariable String menuIds) throws Exception {
     	//定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String,Object> result = new HashMap<>();
@@ -121,6 +129,7 @@ public class MenuController extends BaseController {
 
     @PostMapping("excel")
     @RequiresPermissions("menu:export")
+    @ApiOperation(value="菜单的导出")
     public void export(Menu menu, HttpServletResponse response) throws SysInnerException {
         try {
             List<Menu> menus = this.menuService.findMenuList(menu);

@@ -33,12 +33,15 @@ import com.sunkaisens.ibss.system.service.UserConfigService;
 import com.sunkaisens.ibss.system.service.UserService;
 import com.wuwenze.poi.ExcelKit;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Validated
 @RestController
 @RequestMapping("user")
+@Api(tags="用户管理")
 public class UserController extends BaseController {
 
     private String message;
@@ -54,6 +57,7 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/{username}")
+    @ApiOperation(value="获得单条的用户信息", notes="username   string类型")
     public User detail(@NotBlank(message = "{required}") @PathVariable String username) {
         return this.userService.findByName(username);
     }
@@ -62,6 +66,7 @@ public class UserController extends BaseController {
     //获得用户的列表数据 查询   徐胜浩  2019/7/23
     @GetMapping
     @RequiresPermissions("user:view")
+    @ApiOperation(value="获得全部的用户信息和条件获取用户信息")
     public Map<String, Object> userList(QueryRequest queryRequest, User user) {
         return getDataTable(userService.findUserDetail(user, queryRequest));
     }
@@ -75,6 +80,7 @@ public class UserController extends BaseController {
     @Log("新增用户")
     @PostMapping
 	@RequiresPermissions("user:add")
+    @ApiOperation(value="新增用户", notes="传入user")
     public Map<String, Object> addUser(@Valid @RequestBody User user) throws SysInnerException {
     	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String, Object> result = new HashMap<>();
@@ -101,6 +107,7 @@ public class UserController extends BaseController {
     @Log("修改用户")
     @PutMapping
     @RequiresPermissions("user:update")
+    @ApiOperation(value="修改用户", notes="传入user")
     public Map<String, Object> updateUser(@Valid @RequestBody User user) throws SysInnerException {
     	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String, Object> result = new HashMap<>();
@@ -126,6 +133,7 @@ public class UserController extends BaseController {
     @Log("删除用户")
     @DeleteMapping("/{userIds}")
 	@RequiresPermissions("user:delete")
+    @ApiOperation(value="删除用户", notes="传入user")
     public Map<String, Object> deleteUsers(@NotBlank(message = "{required}") @PathVariable String userIds) throws SysInnerException {
     	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String, Object> result = new HashMap<>();
@@ -219,6 +227,7 @@ public class UserController extends BaseController {
 
     @PostMapping("excel")
     @RequiresPermissions("user:export")
+    @ApiOperation(value="导出角色")
     public void export(QueryRequest queryRequest, User user, HttpServletResponse response) throws SysInnerException {
         try {
             List<User> users = this.userService.findUserDetail(user, queryRequest).getRecords();

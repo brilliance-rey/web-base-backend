@@ -8,6 +8,9 @@ import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.system.domain.SysLog;
 import com.sunkaisens.ibss.system.service.LogService;
 import com.wuwenze.poi.ExcelKit;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,7 @@ import java.util.Map;
 @Validated
 @RestController
 @RequestMapping("log")
+@Api(tags="日志管理")
 public class LogController extends BaseController {
 
     private String message;
@@ -34,6 +38,7 @@ public class LogController extends BaseController {
 
     @GetMapping
     @RequiresPermissions("log:view")
+    @ApiOperation(value="分页获得全部的日志信息和条件的获取日志信息")
     public Map<String, Object> logList(QueryRequest request, SysLog sysLog) {
         return getDataTable(logService.findLogs(request, sysLog));
     }
@@ -47,6 +52,7 @@ public class LogController extends BaseController {
     @Log("删除系统日志")
     @DeleteMapping("/{ids}")
     @RequiresPermissions("log:delete")
+    @ApiOperation(value="删除日志信息",notes="传入 日志id")
     public Map<String, Object> deleteLogss(@NotBlank(message = "{required}") @PathVariable String ids) throws SysInnerException {
     	//定义一个map 向前台传状态值  state： 1成功  ;0失败
     	Map<String, Object> result = new HashMap<>();
@@ -67,6 +73,7 @@ public class LogController extends BaseController {
 
     @PostMapping("excel")
     @RequiresPermissions("log:export")
+    @ApiOperation(value="导出日志信息")
     public void export(QueryRequest request, SysLog sysLog, HttpServletResponse response) throws SysInnerException {
         try {
             List<SysLog> sysLogs = this.logService.findLogs(request, sysLog).getRecords();
