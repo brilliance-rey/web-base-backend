@@ -34,7 +34,7 @@ public class SpringFoxConfig {
 	return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sunkaisens.ibss.system.controller"))//这里是controller所处的包名
+                .apis(RequestHandlerSelectors.basePackage("com.sunkaisens.ibss"))//这里是controller所处的包名
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(securitySchemes())
@@ -78,10 +78,10 @@ public class SpringFoxConfig {
 	//构建api文档的详细信息函数
     private ApiInfo apiInfo() {
         		 return new ApiInfoBuilder()
-        	                .title("xxx项目开发接口文档")    //接口文档标题
-        	                .description("此文档仅供开发技术组领导、开发人员使用")   //描述
-        	                .termsOfServiceUrl("http://www.xxx.com/")   //相关的网址
-        	                .contact(new Contact("后端开发","http://www.xxx.com/","8xxxxx67@qq.com"))    //作者  邮箱等
+        	                .title("1808项目开发接口文档")    //接口文档标题
+        	                .description("此文档仅供开发技术组人员使用")   //描述
+        	                .termsOfServiceUrl("http://www.sunkaisens.com/")   //相关的网址
+        	                .contact(new Contact("后端开发","http://www.sunkaisens.com/","sales@sunkaisens.com/"))    //作者  邮箱等
         	                .version("1.0")  //版本号
         	                .build();
     }
