@@ -20,7 +20,7 @@ public class SwaggerDownloadTest {
      * 生成AsciiDocs格式文档
      * @throws Exception
      */
-    @Test
+	/*@Test
     public void generateAsciiDocs() throws Exception {
         //    输出Ascii格式
         Swagger2MarkupConfig config = new Swagger2MarkupConfigBuilder()
@@ -35,7 +35,7 @@ public class SwaggerDownloadTest {
                 .withConfig(config)
                 .build()
                 .toFolder(Paths.get("./docs/asciidoc/generated"));
-    }
+    }*/
 
    /* *//**
      * 生成Markdown格式文档
@@ -97,12 +97,12 @@ public class SwaggerDownloadTest {
                 .withConfig(config)
                 .build()
                 .toFile(Paths.get("./docs/asciidoc/generated/all"));
-    }
+    }*/
 
-    *//**
+    /**
      * 生成Markdown格式文档,并汇总成一个文件
      * @throws Exception
-     *//*
+     */
     @Test
     public void generateMarkdownDocsToFile() throws Exception {
         //    输出Markdown到单文件
@@ -114,12 +114,12 @@ public class SwaggerDownloadTest {
                 .withoutInlineSchema()
                 .build();
 
-        Swagger2MarkupConverter.from(new URL("http://localhost:8082/v2/api-docs"))
+        Swagger2MarkupConverter.from(new URL("http://localhost:9527/v2/api-docs"))
                 .withConfig(config)
                 .build()
                 .toFile(Paths.get("./docs/markdown/generated/all"));
     }
-	*/
+	
 	
 	
 
