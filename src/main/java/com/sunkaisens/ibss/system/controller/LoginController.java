@@ -123,7 +123,7 @@ public class LoginController {
         userInfo.put("token", jwtToken.getToken());
         userInfo.put("exipreTime", jwtToken.getExipreAt());
         //return new SunkResponse().message("认证成功").data(userInfo);
-        return new SunkResponse().retureCode(RetrueCode.OK).message("登录成功").data(userInfo);
+        return new SunkResponse().data(userInfo);
     }
 
     
@@ -301,6 +301,6 @@ public class LoginController {
     		userInfo.put("permissions", permissions);
     		userInfo.put("user", user);
     	}
-    	  return new SunkResponse().data(userInfo);
+        return new SunkResponse().retureCode(RetrueCode.OK).message("登录成功").data(userInfo);
     }
 }
