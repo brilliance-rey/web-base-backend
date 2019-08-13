@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
 import com.sunkaisens.ibss.common.domain.QueryRequest;
+import com.sunkaisens.ibss.common.domain.RetrueCode;
+import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.system.domain.SysLog;
 import com.sunkaisens.ibss.system.service.LogService;
@@ -54,21 +56,17 @@ public class LogController extends BaseController {
     @RequiresPermissions("log:delete")
     @ApiOperation(value="删除日志信息",notes="传入 日志id")
     public Map<String, Object> deleteLogss(@NotBlank(message = "{required}") @PathVariable String ids) throws SysInnerException {
-    	//定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String, Object> result = new HashMap<>();
+    	//定义一个map 向前台传状态值  returnCode： 0成功  ; 1失败
+//    	Map<String, Object> result = new HashMap<>();
     	try {
             String[] logIds = ids.split(StringPool.COMMA);
             this.logService.deleteLogs(logIds);
-            result.put("state", 1);
-            result.put("message", "删除成功");
+            return new SunkResponse().retureCode(RetrueCode.OK).message("删除成功");
         } catch (Exception e) {
             message = "删除日志失败";
             log.error(message, e);
-            result.put("state", 0);
-            result.put("message", "删除失败");
             throw new SysInnerException(message);
         }
-    	return result;
     }
 
     @PostMapping("excel")

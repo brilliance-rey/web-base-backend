@@ -1,6 +1,5 @@
 package com.sunkaisens.ibss.system.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-import org.apache.poi.ss.formula.functions.IDStarAlgorithm;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
 import com.sunkaisens.ibss.common.domain.QueryRequest;
+import com.sunkaisens.ibss.common.domain.RetrueCode;
+import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
-import com.sunkaisens.ibss.system.domain.Menu;
 import com.sunkaisens.ibss.system.domain.Role;
 import com.sunkaisens.ibss.system.domain.RoleMenu;
 import com.sunkaisens.ibss.system.service.MenuService;
@@ -38,7 +36,6 @@ import com.sunkaisens.ibss.system.service.RoleService;
 import com.wuwenze.poi.ExcelKit;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
@@ -116,20 +113,15 @@ public class RoleController extends BaseController {
     @RequiresPermissions("role:add")
     @ApiOperation(value="新增角色",notes="传入Role实体类")
     public Map<String, Object> addRole(@Valid @RequestBody Role role) throws SysInnerException {
-    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String, Object> result = new HashMap<>();
     	try {
             this.roleService.createRole(role);
-            result.put("state", 1);
-            result.put("message", "添加成功");
+            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+            return new SunkResponse().retureCode(RetrueCode.OK).message("添加成功");
         } catch (Exception e) {
-            message = "新增角色失败";
+            message = "添加失败";
             log.error(message, e);
-            result.put("state", 0);
-            result.put("message", "添加失败");
             throw new SysInnerException(message);
         }
-    	return	result;
     }
 
     /**
@@ -143,20 +135,15 @@ public class RoleController extends BaseController {
     @RequiresPermissions("role:update")
     @ApiOperation(value="修改角色",notes="传入Role实体类")
     public Map<String, Object> updateRole(@Valid @RequestBody Role role) throws SysInnerException {
-    	//定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String, Object> result = new HashMap<>();
     	try {
             this.roleService.updateRole(role);
-            result.put("state", 1);
-            result.put("message", "修改成功");
+            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+            return new SunkResponse().retureCode(RetrueCode.OK).message("修改成功");
         } catch (Exception e) {
             message = "修改角色失败";
             log.error(message, e);
-            result.put("state", 0);
-            result.put("message", "修改失败");
             throw new SysInnerException(message);
         }
-    	return result;
     }
 
     /**
@@ -170,21 +157,16 @@ public class RoleController extends BaseController {
     @RequiresPermissions("role:delete")
     @ApiOperation(value="删除角色",notes="传入roleId")
     public Map<String, Object> deleteRoles(@NotBlank(message = "{required}") @PathVariable String roleIds) throws SysInnerException {
-    	//定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String, Object> result = new HashMap<>();
     	try {
             String[] ids = roleIds.split(StringPool.COMMA);
             this.roleService.deleteRoles(ids);
-            result.put("state", 1);
-            result.put("message", "删除成功");
+           //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+            return new SunkResponse().retureCode(RetrueCode.OK).message("修改成功");
         } catch (Exception e) {
             message = "删除角色失败";
             log.error(message, e);
-            result.put("state", 0);
-            result.put("message", "删除失败");
             throw new SysInnerException(message);
         }
-    return	result;
     }
 
     

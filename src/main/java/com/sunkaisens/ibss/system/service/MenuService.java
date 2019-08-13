@@ -21,20 +21,20 @@ public interface MenuService extends IService<Menu> {
      * @param menu
      * @return
      */
-    Map<String, Object> createMenu(Menu menu)throws Exception;
+    void createMenu(Menu menu)throws Exception;
     /**
      * xsh 2019/8/8 菜单的修改
      * @param menu
      * @throws Exception
      */
 
-    Map<String, Object> updateMenu(Menu menu) throws Exception;
+    void updateMenu(Menu menu) throws Exception;
 
     /**
              * 删除菜单/按钮
      *
      * @param menuIds menuIds
      */
-    Map<String, Object> deleteMeuns(String[] menuIds) throws Exception;
+    void deleteMeuns(String[] menuIds) throws Exception;
 
 }

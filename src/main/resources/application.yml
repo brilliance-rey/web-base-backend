@@ -61,7 +61,7 @@ spring:
 
 #mybatis plus 设置
 mybatis-plus:
-  type-aliases-package: com.sunkaisens.ibss.system.domain,com.sunkaisens.ibss.job.domain
+  type-aliases-package: com.sunkaisens.ibss.system.domain
   mapper-locations: classpath:mapper/*/*.xml
   configuration:
     jdbc-type-for-null: null
@@ -74,15 +74,16 @@ management:
     web:
       exposure:
         include: ['httptrace', 'metrics']
-febs:
+
+ibss:
   # 是否异步记录用户操作日志
-  openAopLog: true
+  openAopLog: false
   shiro:
     # 后端免认证接口 url
     anonUrl: /login,/logout/**,/regist,/user/check/**
     # token有效期，单位秒
     jwtTimeOut: 3600
-ibss:
+  #ip转化为地域  
   ip2region:
     enabled: false
   # 单次最大批量入库数量

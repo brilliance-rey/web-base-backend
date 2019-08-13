@@ -21,4 +21,9 @@ public class SunkResponse extends HashMap<String, Object> {
         super.put(key, value);
         return this;
     }
+
+	public SunkResponse retureCode(RetrueCode rc) {
+		this.put("retureCode", rc.value());
+		return this;
+	}
 }

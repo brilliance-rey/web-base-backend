@@ -31,6 +31,7 @@ import com.sunkaisens.ibss.common.authentication.JWTToken;
 import com.sunkaisens.ibss.common.authentication.JWTUtil;
 import com.sunkaisens.ibss.common.domain.ActiveUser;
 import com.sunkaisens.ibss.common.domain.IBSSConstant;
+import com.sunkaisens.ibss.common.domain.RetrueCode;
 import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.common.properties.IBSSProperties;
@@ -57,9 +58,6 @@ import io.swagger.annotations.ApiOperation;
 @Configuration
 @Api(tags="登陆实现") //swagger的描述
 public class LoginController {
-	
-    @Value("${ibss.ip2region.enabled}")
-	private boolean ip2RegionEn;
 	    
     @Autowired
     private RedisService redisService;
@@ -84,31 +82,17 @@ public class LoginController {
             @NotBlank(message = "{required}")@RequestParam String password, HttpServletRequest request) throws Exception {
     	username = StringUtils.lowerCase(username);
         password = MD5Util.encrypt(username, password);
-       // final String errorMessage = "用户名或密码错误";
+        final String errorMessage = "用户名或密码错误";
          //根据用户名查用户信息
          User user = this.userManager.getUser(username);
-         //用于登录的时候加一个状态值和一个提示
-         Map<String, Object> result = new HashMap<>();
-         
-         
-         
         if (user == null) {
-        	// throw new SysInnerException(errorMessage);
-        	result.put("state", 0);
-        	result.put("message", "用户名或密码错误");
-        	return new SunkResponse().data(result);
+        	 throw new SysInnerException(errorMessage);
            }
         if (!StringUtils.equals(user.getPassword(), password)) {
-        	//throw new SysInnerException(errorMessage);
-        	result.put("state", 0);
-        	result.put("message", "用户名或密码错误");
-        	return new SunkResponse().data(result);
+        	throw new SysInnerException(errorMessage);
         } 
         if (User.STATUS_LOCK.equals(user.getStatus())) {
-        	//throw new SysInnerException("账号已被锁定,请联系管理员！");
-        	result.put("state", 0);
-        	result.put("message", "账号已被锁定,请联系管理员！");
-        	return new SunkResponse().data(result);
+        	throw new SysInnerException("账号已被锁定,请联系管理员！");
         }
 
         
@@ -138,10 +122,8 @@ public class LoginController {
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("token", jwtToken.getToken());
         userInfo.put("exipreTime", jwtToken.getExipreAt());
-        userInfo.put("state", 1);
-        userInfo.put("message", "登录成功");
         //return new SunkResponse().message("认证成功").data(userInfo);
-        return new SunkResponse().data(userInfo);
+        return new SunkResponse().retureCode(RetrueCode.OK).message("登录成功").data(userInfo);
     }
 
     
@@ -246,9 +228,7 @@ public class LoginController {
         activeUser.setIp(ip);
         activeUser.setToken(token.getToken());
         
-        if(ip2RegionEn) {
-        	activeUser.setLoginAddress(AddressUtil.getCityInfo(DbSearcher.BTREE_ALGORITHM, ip));
-        }
+        activeUser.setLoginAddress(AddressUtil.getCityInfo(DbSearcher.BTREE_ALGORITHM, ip));
 
         // zset 存储登录用户，score 为过期时间戳
         this.redisService.zadd(IBSSConstant.ACTIVE_USERS_ZSET_PREFIX, Double.valueOf(token.getExipreAt()), mapper.writeValueAsString(activeUser));
@@ -319,9 +299,7 @@ public class LoginController {
     		 */
     		Set<String> permissions = this.userManager.getUserPermissions(username);
     		userInfo.put("permissions", permissions);
-    		user.setPassword("it's a secret");
     		userInfo.put("user", user);
-    		System.out.println(userInfo);
     	}
     	  return new SunkResponse().data(userInfo);
     }

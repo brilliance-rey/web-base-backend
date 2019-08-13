@@ -25,6 +25,8 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
 import com.sunkaisens.ibss.common.domain.QueryRequest;
+import com.sunkaisens.ibss.common.domain.RetrueCode;
+import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.common.utils.MD5Util;
 import com.sunkaisens.ibss.system.domain.User;
@@ -82,22 +84,17 @@ public class UserController extends BaseController {
 	@RequiresPermissions("user:add")
     @ApiOperation(value="新增用户", notes="传入user")
     public Map<String, Object> addUser(@Valid @RequestBody User user) throws SysInnerException {
-    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String, Object> result = new HashMap<>();
     	try {
             this.userService.createUser(user);
-            result.put("state", 1);
-            result.put("message", "添加成功");
+            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+            return new SunkResponse().retureCode(RetrueCode.OK).message("添加成功");
         } catch (Exception e) {
-            message = "新增用户失败";
+            message = "添加失败";
             log.error(message, e);
-            result.put("state", 0);
-            result.put("message", "添加失败");
             throw new SysInnerException(message);
         }
-    	return result;
     }  
-
+  
     /**
      * xsh 2019/8/8 用户修改的修改 添加一个返回值
      * @param user
@@ -109,23 +106,18 @@ public class UserController extends BaseController {
     @RequiresPermissions("user:update")
     @ApiOperation(value="修改用户", notes="传入user")
     public Map<String, Object> updateUser(@Valid @RequestBody User user) throws SysInnerException {
-    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String, Object> result = new HashMap<>();
     	try {
             this.userService.updateUser(user);
-            result.put("state", 1);
-            result.put("message", "修改成功");
+            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+            return new SunkResponse().retureCode(RetrueCode.OK).message("修改成功");
         } catch (Exception e) {
             message = "修改用户失败";
             log.error(message, e);
-            result.put("state", 0);
-            result.put("message", "修改失败");
             throw new SysInnerException(message);
         }
-    	return result;
     }
     /**
-     * xsh 2019/8/8 用户删除的修改 添加一个返回值
+     * xsh 2019/8/8 用户删除的修改   添加一个返回值
      * @param user
      * @return
      * @throws SysInnerException
@@ -135,21 +127,16 @@ public class UserController extends BaseController {
 	@RequiresPermissions("user:delete")
     @ApiOperation(value="删除用户", notes="传入user")
     public Map<String, Object> deleteUsers(@NotBlank(message = "{required}") @PathVariable String userIds) throws SysInnerException {
-    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String, Object> result = new HashMap<>();
     	try {
             String[] ids = userIds.split(StringPool.COMMA);
             this.userService.deleteUsers(ids);
-            result.put("state", 1);
-            result.put("message", "删除成功");
+            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+            return new SunkResponse().retureCode(RetrueCode.OK).message("删除成功");
         } catch (Exception e) {
-            message = "删除用户失败";
+            message = "删除失败";
             log.error(message, e);
-            result.put("state", 0);
-            result.put("message", "删除失败");
             throw new SysInnerException(message);
         }
-    	return result;
     }
 
     @PutMapping("profile")

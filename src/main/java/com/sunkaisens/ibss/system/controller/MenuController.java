@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
+import com.sunkaisens.ibss.common.domain.RetrueCode;
+import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.domain.router.VueRouter;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.system.dao.MenuMapper;
@@ -35,7 +37,6 @@ import com.wuwenze.poi.ExcelKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.saxon.expr.Component.M;
 
 @Slf4j
 @Validated
@@ -78,13 +79,15 @@ public class MenuController extends BaseController {
     @RequiresPermissions("menu:add")
     @ApiOperation(value="菜单添加", notes="menu 菜单实体类")
     public Map<String, Object> addMenu(@Valid @RequestBody Menu menu) throws Exception {
-    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String,Object> result = new HashMap<>();
-    	//定义一个map用于获取新增后的状态
-    	Map<String,Object> resultSate = new HashMap<>();
-    	resultSate=this.menuService.createMenu(menu);//新增完之后获取一个状态值
-    	result.put("result", resultSate); //封装map中把提示的状态值 返回到前台。。
-        return result ;
+    	try {
+			this.menuService.createMenu(menu);//新增完之后获取一个状态值
+			//SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+			return new SunkResponse().message("添加成功").retureCode(RetrueCode.OK);
+		} catch (Exception e) {
+			message = "添加失败";
+            log.error(message, e);
+            throw new SysInnerException(message);
+		}
     }
 
    /**
@@ -97,13 +100,16 @@ public class MenuController extends BaseController {
     @RequiresPermissions("menu:update")
     @ApiOperation(value="菜单的修改", notes="menu 菜单实体类")
     public Map<String, Object> updateMenu(@Valid @RequestBody Menu menu) throws Exception {
-    	//定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String,Object> result = new HashMap<>();
-    	//定义一个map用于获取修改后的状态
-    	Map<String,Object> resultSate = new HashMap<>();//新增完之后获取一个状态值
-    	resultSate=this.menuService.updateMenu(menu);
-    	result.put("result", resultSate); //封装map中把提示的状态值 返回到前台。
-       return result;
+    	try {
+			this.menuService.updateMenu(menu);
+			//SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+			return new SunkResponse().message("修改成功").retureCode(RetrueCode.OK);
+		} catch (Exception e) {
+			// TODO 自动生成的 catch 块
+			message = "修改失败";
+            log.error(message, e);
+            throw new SysInnerException(message);
+		}
     }
 
     /**
@@ -122,9 +128,15 @@ public class MenuController extends BaseController {
     	Map<String,Object> resultSate = new HashMap<>();
     	//获得全部的ids
 		String[] ids = menuIds.split(StringPool.COMMA);
-		resultSate=this.menuService.deleteMeuns(ids);
-		result.put("result", resultSate);
-    	return result;
+		try {
+			this.menuService.deleteMeuns(ids);
+			//SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+			return new SunkResponse().message("删除成功").retureCode(RetrueCode.OK);
+		} catch (Exception e) {
+			message = "删除失败";
+            log.error(message, e);
+            throw new SysInnerException(message);
+		}
     }
 
     @PostMapping("excel")

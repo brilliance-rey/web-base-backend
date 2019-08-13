@@ -27,6 +27,8 @@ import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
 import com.sunkaisens.ibss.common.domain.QueryRequest;
+import com.sunkaisens.ibss.common.domain.RetrueCode;
+import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.system.dao.DeptMapper;
 import com.sunkaisens.ibss.system.dao.UserMapper;
@@ -73,20 +75,15 @@ public class DeptController extends BaseController {
     @RequiresPermissions("dept:add")
     @ApiOperation(value="部门添加", notes="dept 部门实体类")
     public Map<String, Object> addDept(@Valid @RequestBody Dept dept) throws SysInnerException {
-    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String, Object> result = new HashMap<>();
     	try {
             this.deptService.createDept(dept);
-            result.put("state", 1);
-            result.put("message", "添加成功");
+           //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+            return new SunkResponse().retureCode(RetrueCode.OK).message("添加成功");
         } catch (Exception e) {
-            message = "新增部门失败";
+            message = "添加失败";
             log.error(message, e);
-            result.put("state", 0);
-            result.put("message", "添加失败");
             throw new SysInnerException(message);
         }
-    	return result;
     }
     
 	/**
@@ -116,26 +113,23 @@ public class DeptController extends BaseController {
     	 if (parentId!=0) {
     		 //在判断 如果有用户再用部门不让删 否则可以删除
     		 if (count!=0) {
-    			 result.put("state",0);
-    			 result.put("message", "有用户关联本部门，不可删除");
+    			 message = "有用户关联本部门，不可删除";
+    			 throw new SysInnerException(message);
     		 }else {
     			 try {
     				 this.deptService.deleteDepts(ids);
-    				 result.put("state", 1);
-    				 result.put("message", "删除成功");
+    				 //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+    		         return new SunkResponse().retureCode(RetrueCode.OK).message("删除成功");
     			 } catch (Exception e) {
-    				 message = "删除部门失败";
+    				 message = "删除失败";
     				 log.error(message, e); 
-    				 result.put("state", 0);
-    				 result.put("message", "删除失败");
     				 throw new SysInnerException(message);
     			 }
     		 }
     	 }else {
-    		 result.put("state", 0);
-    		 result.put("message", "父级菜单不可删除");
+    		 message = "父级菜单不可删除";
+			 throw new SysInnerException(message);
     	 }
-    	return result;
     }
     
     /**
@@ -148,20 +142,15 @@ public class DeptController extends BaseController {
     @RequiresPermissions("dept:update")
     @ApiOperation(value="部门修改", notes="dept 部门实体")
     public Map<String, Object> updateDept(@Valid @RequestBody Dept dept) throws SysInnerException {
-    	 //定义一个map 向前台传状态值  state： 1成功  ;0失败
-    	Map<String, Object> result = new HashMap<>();
     	try {
             this.deptService.updateDept(dept);
-            result.put("state", 1);
-            result.put("message", "修改成功");
+            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+	         return new SunkResponse().retureCode(RetrueCode.OK).message("修改成功");
         } catch (Exception e) {
-            message = "修改部门失败";
+            message = "修改失败";
             log.error(message, e);
-            result.put("state", 0);
-            result.put("message", "修改失败");
             throw new SysInnerException(message);
         }
-    	return result;
     }
 
     @PostMapping("excel")

@@ -39,17 +39,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<!-- 打war时需要排除tomcat -->
-				<!-- <exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion> -->
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
         </dependency>
         <!-- 热部署 -->
        <!--  <dependency>
@@ -64,12 +53,6 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 				
-		<!-- 引入log4j2依赖 -->
-	    <dependency> 
-	        <groupId>org.springframework.boot</groupId>  
-	        <artifactId>spring-boot-starter-log4j2</artifactId>  
-	    </dependency>
-	    
         <!-- 动态数据源 -->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -206,8 +189,7 @@
 		 <dependency>
 		    <groupId>junit</groupId>
 		    <artifactId>junit</artifactId>
-		    <version>4.10</version>
-		</dependency>
+		    </dependency>
     </dependencies>
    
     <repositories>

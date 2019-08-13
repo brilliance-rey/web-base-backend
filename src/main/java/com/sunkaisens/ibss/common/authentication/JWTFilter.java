@@ -38,7 +38,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         IBSSProperties ibssProperties = SpringContextUtil.getBean(IBSSProperties.class);
         String[] anonUrl = StringUtils.splitByWholeSeparatorPreserveAllTokens(ibssProperties.getShiro().getAnonUrl(), StringPool.COMMA);
        
-        System.err.println("ReqURL: " + httpServletRequest.getRequestURI());
+//        System.err.println("ReqURL: " + httpServletRequest.getRequestURI());
         boolean match = false;
         for (String u : anonUrl) {
             if (pathMatcher.match(u, httpServletRequest.getRequestURI()))

@@ -1,11 +1,12 @@
 package com.sunkaisens.ibss.common.handler;
 
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.sunkaisens.ibss.common.domain.SunkResponse;
-import com.sunkaisens.ibss.common.exception.LimitAccessException;
-import com.sunkaisens.ibss.common.exception.SysInnerException;
+import java.util.List;
+import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.core.Ordered;
@@ -17,29 +18,31 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
-import java.util.List;
-import java.util.Set;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.sunkaisens.ibss.common.domain.RetrueCode;
+import com.sunkaisens.ibss.common.domain.SunkResponse;
+import com.sunkaisens.ibss.common.exception.LimitAccessException;
+import com.sunkaisens.ibss.common.exception.SysInnerException;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler { 
 
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public SunkResponse handleException(Exception e) {
         log.error("系统内部异常，异常信息：", e);
-        return new SunkResponse().message("系统内部异常");
+        return new SunkResponse().retureCode(RetrueCode.ERROR).message("系统内部异常");
     }
 
     @ExceptionHandler(value = SysInnerException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public SunkResponse handleParamsInvalidException(SysInnerException e) {
         log.error("系统错误：{}", e.getMessage());
-        return new SunkResponse().message(e.getMessage());
+        return new SunkResponse().retureCode(RetrueCode.ERROR).message(e.getMessage());
     }
 
     /**
