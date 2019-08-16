@@ -165,11 +165,19 @@ public class DeptController extends BaseController {
             throw new SysInnerException(message);
         }
     }*/
+    
+    /**
+     * xsh  2019/8/16 导出 部门
+     * @param dept
+     * @param request
+     * @return
+     * @throws SysInnerException
+     */
     @GetMapping("excel")
-    //@RequiresPermissions("dept:export")
+    @RequiresPermissions("dept:export")
     @ApiOperation(value="部门导出")
     public List<Dept> export(Dept dept,QueryRequest request) throws SysInnerException {
-    	return this.deptService.findDepts(dept, request);
+     	return this.deptService.findDepts(dept, request);
     }
     
 }
