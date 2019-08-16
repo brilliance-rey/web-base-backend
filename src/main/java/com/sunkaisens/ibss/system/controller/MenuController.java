@@ -125,8 +125,7 @@ public class MenuController extends BaseController {
 	@DeleteMapping("/{menuIds}")
 	@RequiresPermissions("menu:delete")
 	@ApiOperation(value = "菜单的删除", notes = "menuIds  string类型")
-	public Map<String, Object> deleteMenus(@NotBlank(message = "{required}") @PathVariable String menuIds)
-			throws Exception {
+	public Map<String, Object> deleteMenus(@NotBlank(message = "{required}") @PathVariable String menuIds)throws Exception {
 		// 定义一个map 向前台传状态值 state： 1成功 ;0失败
 		Map<String, Object> result = new HashMap<>();
 		// 定义一个map用于获取删除后的状态
@@ -145,17 +144,20 @@ public class MenuController extends BaseController {
 	}
 
 	// xsh 后期用了在放开
-	/*
-	 * @PostMapping("excel")
-	 * 
-	 * @RequiresPermissions("menu:export")
-	 * 
-	 * @ApiOperation(value="菜单的导出") public void export(Menu menu,
-	 * HttpServletResponse response) throws SysInnerException { try { List<Menu>
-	 * menus = this.menuService.findMenuList(menu); ExcelKit.$Export(Menu.class,
-	 * response).downXlsx(menus, false); } catch (Exception e) { message =
-	 * "导出Excel失败"; log.error(message, e); throw new SysInnerException(message); } }
-	 */
+	/*@PostMapping("excel")
+	@RequiresPermissions("menu:export")
+	@ApiOperation(value="菜单的导出") 
+	public void export(Menu menu,HttpServletResponse response) throws SysInnerException { 
+		try { 
+		    List<Menu> menus = this.menuService.findMenuList(menu); 
+		    ExcelKit.$Export(Menu.class,response).downXlsx(menus, false); 
+		} catch (Exception e) { 
+		    message ="导出Excel失败"; 
+		    log.error(message, e); 
+		    throw new SysInnerException(message); 
+		} 
+    }*/
+	 
 
 	/**
 	 * xsh 2019/8/16 导出菜单
