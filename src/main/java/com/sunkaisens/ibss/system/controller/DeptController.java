@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
 import com.sunkaisens.ibss.common.domain.QueryRequest;
@@ -40,7 +39,6 @@ import com.wuwenze.poi.ExcelKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import springfox.documentation.swagger.web.SwaggerApiListingReader;
 
 @Slf4j
 @Validated
@@ -153,7 +151,8 @@ public class DeptController extends BaseController {
         }
     }
 
-    @PostMapping("excel")
+    // xsh 暂时保留
+    /*@PostMapping("excel")
     @RequiresPermissions("dept:export")
     @ApiOperation(value="部门导出")
     public void export(Dept dept, QueryRequest request, HttpServletResponse response) throws SysInnerException {
@@ -165,5 +164,12 @@ public class DeptController extends BaseController {
             log.error(message, e);
             throw new SysInnerException(message);
         }
+    }*/
+    @GetMapping("excel")
+    //@RequiresPermissions("dept:export")
+    @ApiOperation(value="部门导出")
+    public List<Dept> export(Dept dept,QueryRequest request) throws SysInnerException {
+    	return this.deptService.findDepts(dept, request);
     }
+    
 }
