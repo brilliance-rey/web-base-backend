@@ -167,16 +167,7 @@ public class MenuController extends BaseController {
 	@RequiresPermissions("menu:export")
 	@ApiOperation(value = "菜单的导出")
 	public List<Menu> export(Menu menu) {
-		System.out.println("dsdsfdsf》》》》》》" + this.menuService.findMenuList(menu));
 		return this.menuService.findMenuList(menu);
 	}
-
-
-    
-    
-    
-    
-    
-    
     
 }
