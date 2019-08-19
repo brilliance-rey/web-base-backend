@@ -69,7 +69,10 @@ public class LogController extends BaseController {
         }
     }
 
-    @PostMapping("excel")
+    /**
+     * xsh 2019/8/19 后期用了再修改
+     */
+    /*@PostMapping("excel")
     @RequiresPermissions("log:export")
     @ApiOperation(value="导出日志信息")
     public void export(QueryRequest request, SysLog sysLog, HttpServletResponse response) throws SysInnerException {
@@ -81,5 +84,5 @@ public class LogController extends BaseController {
             log.error(message, e);
             throw new SysInnerException(message);
         }
-    }
+    }*/
 }

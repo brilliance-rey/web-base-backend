@@ -170,7 +170,10 @@ public class RoleController extends BaseController {
     }
 
     
-    @PostMapping("excel")
+    /**
+     * xsh 2019/8/19 后期用了再修改
+     */
+    /*@PostMapping("excel")
     @RequiresPermissions("role:export")
     @ApiOperation(value="导出角色")
     public void export(QueryRequest queryRequest, Role role, HttpServletResponse response) throws SysInnerException {
@@ -182,5 +185,5 @@ public class RoleController extends BaseController {
             log.error(message, e);
             throw new SysInnerException(message);
         }
-    }
+    }*/
 }

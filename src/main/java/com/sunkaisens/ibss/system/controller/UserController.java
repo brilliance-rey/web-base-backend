@@ -211,10 +211,12 @@ public class UserController extends BaseController {
             throw new SysInnerException(message);
         }
     }
-
-    @PostMapping("excel")
+    /**
+     * xsh 2019/8/19 后期用了再修改
+     */
+    /*@PostMapping("excel")
     @RequiresPermissions("user:export")
-    @ApiOperation(value="导出角色")
+    @ApiOperation(value="导出用户信息")
     public void export(QueryRequest queryRequest, User user, HttpServletResponse response) throws SysInnerException {
         try {
             List<User> users = this.userService.findUserDetail(user, queryRequest).getRecords();
@@ -224,5 +226,5 @@ public class UserController extends BaseController {
             log.error(message, e);
             throw new SysInnerException(message);
         }
-    }
+    }*/
 }
