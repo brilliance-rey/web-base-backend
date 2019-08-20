@@ -77,7 +77,7 @@ management:
 
 ibss:
   # 是否异步记录用户操作日志
-  openAopLog: false
+  openAopLog: true
   shiro:
     # 后端免认证接口 url
     anonUrl: /login,/logout/**,/regist,/user/check/**

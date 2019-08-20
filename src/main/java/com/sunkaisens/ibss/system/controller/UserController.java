@@ -1,10 +1,7 @@
 package com.sunkaisens.ibss.system.controller;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
@@ -33,7 +30,6 @@ import com.sunkaisens.ibss.system.domain.User;
 import com.sunkaisens.ibss.system.domain.UserConfig;
 import com.sunkaisens.ibss.system.service.UserConfigService;
 import com.sunkaisens.ibss.system.service.UserService;
-import com.wuwenze.poi.ExcelKit;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -68,9 +64,10 @@ public class UserController extends BaseController {
     //获得用户的列表数据 查询   徐胜浩  2019/7/23
     @GetMapping
     @RequiresPermissions("user:view")
-    @ApiOperation(value="获得全部的用户信息和条件获取用户信息")
-    public Map<String, Object> userList(QueryRequest queryRequest, User user) {
-        return getDataTable(userService.findUserDetail(user, queryRequest));
+    @ApiOperation(value="获得全部的用户信息和条件获取用户信息", notes="aaaaaaaa")
+    public Map<String, Object> userList(QueryRequest queryRequest, User user){
+    	
+    	return getDataTable(userService.findUserDetail(user, queryRequest));
     }
 
     /**
@@ -83,7 +80,7 @@ public class UserController extends BaseController {
     @PostMapping
 	@RequiresPermissions("user:add")
     @ApiOperation(value="新增用户", notes="传入user")
-    public Map<String, Object> addUser(@Valid @RequestBody User user) throws SysInnerException {
+    public Map<String, Object> addUser(@Valid @RequestBody User user) throws Exception {
     	try {
             this.userService.createUser(user);
             //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
@@ -105,7 +102,7 @@ public class UserController extends BaseController {
     @PutMapping
     @RequiresPermissions("user:update")
     @ApiOperation(value="修改用户", notes="传入user")
-    public Map<String, Object> updateUser(@Valid @RequestBody User user) throws SysInnerException {
+    public Map<String, Object> updateUser(@Valid @RequestBody User user) throws Exception {
     	try {
             this.userService.updateUser(user);
             //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败

@@ -1,7 +1,9 @@
 package com.sunkaisens.ibss.common.aspect;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
 import com.sunkaisens.ibss.common.authentication.JWTUtil;
+import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.common.properties.IBSSProperties;
 import com.sunkaisens.ibss.common.utils.HttpContextUtil;
 import com.sunkaisens.ibss.common.utils.IPUtil;
@@ -15,6 +17,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +45,7 @@ public class LogAspect {
     }
 
     @Around("pointcut()")
-    public Object around(ProceedingJoinPoint point) throws JsonProcessingException {
+    public Object around(ProceedingJoinPoint point) throws JsonProcessingException, SysInnerException {
         Object result = null;
         long beginTime = System.currentTimeMillis();
         try {
@@ -50,6 +53,7 @@ public class LogAspect {
             result = point.proceed();
         } catch (Throwable e) {
             log.error(e.getMessage());
+            throw new SysInnerException(e.getMessage());
         }
         // 获取 request
         HttpServletRequest request = HttpContextUtil.getHttpServletRequest();
