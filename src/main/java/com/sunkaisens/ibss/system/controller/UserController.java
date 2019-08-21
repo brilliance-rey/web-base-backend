@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -69,7 +70,7 @@ public class UserController extends BaseController {
     //获得用户的列表数据 查询   徐胜浩  2019/7/23
     @GetMapping
     @RequiresPermissions("user:view")
-    @ApiOperation(value="获得全部的用户信息和条件获取用户信息", notes="aaaaaaaa")
+    @ApiOperation(value="获得全部的用户信息和条件获取用户信息", notes="user")
     public Map<String, Object> userList(QueryRequest queryRequest, User user){
     	
     	return getDataTable(userService.findUserDetail(user, queryRequest));
@@ -197,12 +198,23 @@ public class UserController extends BaseController {
             return false;
     }
 
-    @PutMapping("password")
-    public void updatePassword(
-            @NotBlank(message = "{required}") String username,
-            @NotBlank(message = "{required}") String password) throws SysInnerException {
+     /**
+      * xsh 2109/8/21 修改 密码的接口
+      * 
+      * @param username
+      * @param password
+      * @return
+      * @throws Exception
+      */
+    @PutMapping("/password")
+    @ApiOperation(value="修改用户密码", notes="username/passwprd 用户名和密码")
+    public Map<String, Object> updatePassword(
+            @NotBlank(message = "{required}") @RequestParam String username,
+            @NotBlank(message = "{required}") @RequestParam String password) throws Exception {
         try {
             userService.updatePassword(username, password);
+            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+            return new SunkResponse().retureCode(RetrueCode.OK).message("修改密码成功");
         } catch (Exception e) {
             message = "修改密码失败";
             log.error(message, e);
