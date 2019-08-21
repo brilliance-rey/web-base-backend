@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
@@ -26,6 +27,7 @@ import com.sunkaisens.ibss.common.domain.RetrueCode;
 import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.common.utils.MD5Util;
+import com.sunkaisens.ibss.system.dao.UserMapper;
 import com.sunkaisens.ibss.system.domain.User;
 import com.sunkaisens.ibss.system.domain.UserConfig;
 import com.sunkaisens.ibss.system.service.UserConfigService;
@@ -48,6 +50,9 @@ public class UserController extends BaseController {
     private UserService userService;
     @Autowired
     private UserConfigService userConfigService;
+    // xsh 2019/8/21 
+    @Autowired
+    private UserMapper userMapper;
     
     @GetMapping("check/{username}")
     public boolean checkUserName(@NotBlank(message = "{required}") @PathVariable String username) {
@@ -81,16 +86,25 @@ public class UserController extends BaseController {
 	@RequiresPermissions("user:add")
     @ApiOperation(value="新增用户", notes="传入user")
     public Map<String, Object> addUser(@Valid @RequestBody User user) throws Exception {
-    	try {
-            this.userService.createUser(user);
-            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
-            return new SunkResponse().retureCode(RetrueCode.OK).message("添加成功");
-        } catch (Exception e) {
-            message = "添加失败";
-            log.error(message, e);
-            throw new SysInnerException(message);
-        }
-    }  
+    	//判断用户名是否存在  存在了就不让加 让重新名命名   xsh 2019/8/21
+        String username=user.getUsername();
+        //获取正在使用的条数 xsh 2019/8/21
+        int num  =this.userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getUsername, username) );
+        //如果不为空  说明有用户在使用  xsh 2019/8/21
+        if (num!=0) {
+        	throw new SysInnerException("用户名已存在");
+		}else {
+    	    try {
+	            this.userService.createUser(user);
+	            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+	            return new SunkResponse().retureCode(RetrueCode.OK).message("添加成功");
+              } catch (Exception e) {
+	            message = "添加失败";
+	            log.error(message, e);
+	            throw new SysInnerException(message);
+             }
+          }
+    }
   
     /**
      * xsh 2019/8/8 用户修改的修改 添加一个返回值

@@ -32,6 +32,7 @@ import com.sunkaisens.ibss.common.exception.SysInnerException;
 import com.sunkaisens.ibss.system.dao.DeptMapper;
 import com.sunkaisens.ibss.system.dao.UserMapper;
 import com.sunkaisens.ibss.system.domain.Dept;
+import com.sunkaisens.ibss.system.domain.Role;
 import com.sunkaisens.ibss.system.domain.User;
 import com.sunkaisens.ibss.system.service.DeptService;
 import com.wuwenze.poi.ExcelKit;
@@ -54,9 +55,10 @@ public class DeptController extends BaseController {
     
     @Autowired
 	private UserMapper userMapper;
+    //xsh 2019/8/21
     @Autowired
 	private DeptMapper deptMapper;
-    
+   
     @GetMapping
     @ApiOperation(value="分页获得全部的部门信息和条件的获取部门信息")
     public Map<String, Object> deptList(QueryRequest request, Dept dept) {
@@ -73,12 +75,43 @@ public class DeptController extends BaseController {
     @RequiresPermissions("dept:add")
     @ApiOperation(value="部门添加", notes="dept 部门实体类")
     public Map<String, Object> addDept(@Valid @RequestBody Dept dept) throws SysInnerException {
+    	//判断部门名是否存在  存在了就不让加 让重新名命名   xsh 2019/8/21
+        String deptName=dept.getDeptName();
+        //获取正在使用的条数 xsh 2019/8/21
+        Integer num  =this.deptMapper.selectCount(new LambdaQueryWrapper<Dept>().eq(Dept::getDeptName, deptName) );
+        //如果不为空  说明有用户在使用  xsh 2019/8/21
+        if (num!=0) {
+        	throw new SysInnerException("部门名称已存在");
+        }else {
+        	try {
+        		this.deptService.createDept(dept);
+        		//SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+        		return new SunkResponse().retureCode(RetrueCode.OK).message("添加成功");
+        	} catch (Exception e) {
+        		message = "添加失败";
+        		log.error(message, e);
+        		throw new SysInnerException(message);
+        	}
+        }
+    }
+    
+    
+    /**
+	 *  xsh 2019/8/2修改部门的修改
+	 * @param dept
+	 * @throws SysInnerException
+	 */
+    @Log("修改部门")
+    @PutMapping
+    @RequiresPermissions("dept:update")
+    @ApiOperation(value="部门修改", notes="dept 部门实体")
+    public Map<String, Object> updateDept(@Valid @RequestBody Dept dept) throws SysInnerException {
     	try {
-            this.deptService.createDept(dept);
-           //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
-            return new SunkResponse().retureCode(RetrueCode.OK).message("添加成功");
+            this.deptService.updateDept(dept);
+            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+	         return new SunkResponse().retureCode(RetrueCode.OK).message("修改成功");
         } catch (Exception e) {
-            message = "添加失败";
+            message = "修改失败";
             log.error(message, e);
             throw new SysInnerException(message);
         }
@@ -130,26 +163,7 @@ public class DeptController extends BaseController {
     	 }
     }
     
-    /**
-	 *  xsh 2019/8/2修改部门的修改
-	 * @param dept
-	 * @throws SysInnerException
-	 */
-    @Log("修改部门")
-    @PutMapping
-    @RequiresPermissions("dept:update")
-    @ApiOperation(value="部门修改", notes="dept 部门实体")
-    public Map<String, Object> updateDept(@Valid @RequestBody Dept dept) throws SysInnerException {
-    	try {
-            this.deptService.updateDept(dept);
-            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
-	         return new SunkResponse().retureCode(RetrueCode.OK).message("修改成功");
-        } catch (Exception e) {
-            message = "修改失败";
-            log.error(message, e);
-            throw new SysInnerException(message);
-        }
-    }
+    
 
     // xsh 暂时保留
     /*@PostMapping("excel")

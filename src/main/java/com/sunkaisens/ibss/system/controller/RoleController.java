@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.sunkaisens.ibss.common.annotation.Log;
 import com.sunkaisens.ibss.common.controller.BaseController;
@@ -28,8 +29,10 @@ import com.sunkaisens.ibss.common.domain.QueryRequest;
 import com.sunkaisens.ibss.common.domain.RetrueCode;
 import com.sunkaisens.ibss.common.domain.SunkResponse;
 import com.sunkaisens.ibss.common.exception.SysInnerException;
+import com.sunkaisens.ibss.system.dao.RoleMapper;
 import com.sunkaisens.ibss.system.domain.Role;
 import com.sunkaisens.ibss.system.domain.RoleMenu;
+import com.sunkaisens.ibss.system.domain.User;
 import com.sunkaisens.ibss.system.service.MenuService;
 import com.sunkaisens.ibss.system.service.RoleMenuServie;
 import com.sunkaisens.ibss.system.service.RoleService;
@@ -53,9 +56,11 @@ public class RoleController extends BaseController {
     private MenuService menuService;
     @Autowired
     private RoleMenuServie roleMenuServie;
+    
     private String message;
     
-    
+    @Autowired
+    private RoleMapper roleMapper;
     
     // 获取角色的list 形成表格   xsh 2019/7/23
     @GetMapping
@@ -113,15 +118,25 @@ public class RoleController extends BaseController {
     @RequiresPermissions("role:add")
     @ApiOperation(value="新增角色",notes="传入Role实体类")
     public Map<String, Object> addRole(@Valid @RequestBody Role role) throws SysInnerException {
-    	try {
-            this.roleService.createRole(role);
-            //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
-            return new SunkResponse().retureCode(RetrueCode.OK).message("添加成功");
-        } catch (Exception e) {
-            message = "添加失败";
-            log.error(message, e);
-            throw new SysInnerException(message);
+    	//判断角色名是否存在  存在了就不让加 让重新名命名   xsh 2019/8/21
+        String roleName=role.getRoleName();
+        //获取正在使用的条数 xsh 2019/8/21
+        Integer num  =this.roleMapper.selectCount(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, roleName) );
+        //如果不为空  说明有用户在使用  xsh 2019/8/21
+        if (num!=0) {
+        	throw new SysInnerException("角色名称已存在");
+        }else {
+        	try {
+        		this.roleService.createRole(role);
+        		//SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+        		return new SunkResponse().retureCode(RetrueCode.OK).message("添加成功");
+        	} catch (Exception e) {
+        		message = "添加失败";
+        		log.error(message, e);
+        		throw new SysInnerException(message);
+        	}
         }
+    	
     }
 
     /**
