@@ -95,14 +95,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 将用户相关信息保存到 Redis中
         userManager.loadUserRedisCache(user);
     }
-
+    
+	 /**
+	  * xsh 2109/8/23 修改密码的修改 
+	  */
     @Override
     @Transactional
     public void updateUser(User user) throws Exception {
-        // 更新用户
-        user.setPassword(null);
-        user.setModifyTime(new Date());
-        updateById(user);
+    	 //获得前台传过来的用户名  xsh  2109/8/23
+    	 String userName= user.getUsername();
+         User user1 =baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, userName));
+         //获得前台传过来新的密码 
+         String passWordNew=user.getPassword();
+         //获得数据库中的密码
+         String passWord =user1.getPassword();
+         //判读提交的密码和原来是否一样  一样的话不修改 不一样话修改重置密码
+         if (passWord.equals(passWordNew)&&!" ".equals(passWordNew)) {
+		}else {
+			// 重置用户密码
+			user.setPassword(MD5Util.encrypt(user.getUsername(), User.DEFAULT_PASSWORD));
+		}
+         user.setModifyTime(new Date());
+         updateById(user);
 
         userRoleMapper.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, user.getUserId()));
 

@@ -107,7 +107,12 @@ public class DeptController extends BaseController {
     @ApiOperation(value="部门修改", notes="dept 部门实体")
     public Map<String, Object> updateDept(@Valid @RequestBody Dept dept) throws SysInnerException {
     	try {
-            this.deptService.updateDept(dept);
+    		//判断是否更新成功
+           Integer num = this.deptService.updateDept(dept);
+           if (num==0) {
+        	 //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+		     return new SunkResponse().retureCode(RetrueCode.ERROR).message("数据已被修改，请获取最新数据");
+		    }
             //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
 	         return new SunkResponse().retureCode(RetrueCode.OK).message("修改成功");
         } catch (Exception e) {
@@ -144,8 +149,8 @@ public class DeptController extends BaseController {
     	 if (parentId!=0) {
     		 //在判断 如果有用户再用部门不让删 否则可以删除
     		 if (count!=0) {
-    			 message = "有用户关联本部门，不可删除";
-    			 throw new SysInnerException(message);
+    			 //SunkResponse 向前台传状态值  RetrueCode.OK 0成功  ;   RetrueCode.ERROR(1) 1：失败
+		         return new SunkResponse().retureCode(RetrueCode.ERROR).message("有用户关联本部门，不可删除");
     		 }else {
     			 try {
     				 this.deptService.deleteDepts(ids);

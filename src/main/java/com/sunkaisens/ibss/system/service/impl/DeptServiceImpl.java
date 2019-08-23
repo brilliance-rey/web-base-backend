@@ -78,11 +78,24 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     @Transactional
-    public void updateDept(Dept dept) {
-        dept.setModifyTime(new Date());
-        this.baseMapper.updateById(dept);
-    }
-
+    public Integer updateDept(Dept dept) {
+    	// xsh  2019/8/22  修改控制并发的问题
+    	QueryWrapper<Dept> queryWrapper = new QueryWrapper<>();
+        Date date=dept.getModifyTime();
+        if (date==null) {
+        	queryWrapper.lambda()
+        	.isNull(Dept::getModifyTime)
+        	.eq(Dept::getDeptId,dept.getDeptId());
+		}else {
+			queryWrapper.lambda()
+        	.eq(Dept::getModifyTime,dept.getModifyTime())
+        	.eq(Dept::getDeptId,dept.getDeptId());
+		}
+       dept.setModifyTime(new Date());
+       Integer num =this.baseMapper.update(dept, queryWrapper);
+       return num;
+     }
+    
     @Override
     @Transactional
     public void deleteDepts(String[] deptIds) {
